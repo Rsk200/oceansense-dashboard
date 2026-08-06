@@ -11,7 +11,7 @@ MODELS_DIR = BASE_DIR / "models"
 ENSO_MODEL_DIR = MODELS_DIR / "enso"
 WATER_MODEL_DIR = MODELS_DIR / "water_level"
 DB_PATH = DATA_DIR / "oceansense.db"
-DATABASE_URL = f"sqlite:///{DB_PATH.as_posix()}"
+DATABASE_URL = os.getenv("DATABASE_URL", f"sqlite:///{DB_PATH.as_posix()}")
 
 SOURCE_DATA_DIR = Path(os.getenv("OCEANSENSE_SOURCE_DATA_DIR", r"C:\Users\Yaad\Documents\fine tune"))
 GLOBAL_CSV = SOURCE_DATA_DIR / "final_global_with_nino34_2005_2025 (1).csv"
