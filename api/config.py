@@ -14,9 +14,9 @@ DB_PATH = DATA_DIR / "oceansense.db"
 DATABASE_URL = os.getenv("DATABASE_URL", f"sqlite:///{DB_PATH.as_posix()}")
 
 SOURCE_DATA_DIR = Path(os.getenv("OCEANSENSE_SOURCE_DATA_DIR", r"C:\Users\Yaad\Documents\fine tune"))
-GLOBAL_CSV = SOURCE_DATA_DIR / "final_global_with_nino34_2005_2025 (1).csv"
-LOCAL_CSV = SOURCE_DATA_DIR / "local_with_enso_2006_2025.csv"
-ENSO_FORECAST_CSV = SOURCE_DATA_DIR / "enso_forecast_12m.csv"
+GLOBAL_CSV = DATA_DIR / "final_global_with_nino34_2005_2025 (1).csv"
+LOCAL_CSV = DATA_DIR / "local_with_enso_2006_2025.csv"
+ENSO_FORECAST_CSV = DATA_DIR / "enso_forecast_12m.csv"
 REFERENCE_WATER_LEVEL_2026_CSV = DATA_DIR / "reference_water_level_2026_hybrid.csv"
 
 REQUIRE_ARTIFACTS = os.getenv("OCEANSENSE_REQUIRE_ARTIFACTS", "1") == "1"

@@ -16,14 +16,8 @@ __pycache__/
 htmlcov/
 .env
 
-# Data and Models
+# Data
 data/*.db
-data/*.csv
-models/**/*.json
-models/**/*.bin
-models/**/*.xgb
-models/**/*.h5
-models/**/*.pt
 
 # System
 .DS_Store
