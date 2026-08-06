@@ -1,0 +1,39 @@
+- generic [ref=f1e3]:
+  - navigation [ref=f1e4]:
+    - generic [ref=f1e6]:
+      - link "OceanSense" [ref=f1e7] [cursor=pointer]:
+        - /url: /
+      - generic [ref=f1e13]:
+        - link "Home" [ref=f1e14] [cursor=pointer]:
+          - /url: /
+        - link "Research" [ref=f1e15] [cursor=pointer]:
+          - /url: /#research
+        - link "AI Pipeline" [ref=f1e16] [cursor=pointer]:
+          - /url: /#pipeline
+        - link "Dashboard" [ref=f1e17] [cursor=pointer]:
+          - /url: /dashboard/overview
+        - link "Resources" [ref=f1e18] [cursor=pointer]:
+          - /url: /#tech
+        - link "About" [ref=f1e19] [cursor=pointer]:
+          - /url: /#research-section
+  - complementary [ref=f1e21]:
+    - generic [ref=f1e22]:
+      - generic [ref=f1e23]: OceanSense
+      - navigation [ref=f1e30]:
+        - link "Overview" [ref=f1e31] [cursor=pointer]:
+          - /url: /dashboard/overview
+        - link "ENSO Forecast" [ref=f1e38] [cursor=pointer]:
+          - /url: /dashboard/enso
+        - link "Water Level" [ref=f1e44] [cursor=pointer]:
+          - /url: /dashboard/water-level
+        - link "Manual Prediction" [ref=f1e49] [cursor=pointer]:
+          - /url: /dashboard/manual
+        - link "Risk Map" [ref=f1e53] [cursor=pointer]:
+          - /url: /dashboard/risk-map
+        - link "Alerts" [ref=f1e57] [cursor=pointer]:
+          - /url: /dashboard/alerts
+        - link "Advisory" [ref=f1e61] [cursor=pointer]:
+          - /url: /dashboard/advisory
+        - link "Forecast History" [ref=f1e65] [cursor=pointer]:
+          - /url: /dashboard/history
+      - generic [ref=f1e71]: AI-Powered Flood Early Warning

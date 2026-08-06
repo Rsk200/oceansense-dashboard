@@ -1,0 +1,307 @@
+- generic [ref=f1e3]:
+  - navigation [ref=f1e4]:
+    - generic [ref=f1e6]:
+      - link "OceanSense" [ref=f1e7] [cursor=pointer]:
+        - /url: /
+      - generic [ref=f1e13]:
+        - link "Home" [ref=f1e14] [cursor=pointer]:
+          - /url: /
+        - link "Research" [ref=f1e15] [cursor=pointer]:
+          - /url: /#research
+        - link "AI Pipeline" [ref=f1e16] [cursor=pointer]:
+          - /url: /#pipeline
+        - link "Dashboard" [ref=f1e17] [cursor=pointer]:
+          - /url: /dashboard/overview
+        - link "Resources" [ref=f1e18] [cursor=pointer]:
+          - /url: /#tech
+        - link "About" [ref=f1e19] [cursor=pointer]:
+          - /url: /#research-section
+        - link "Launch Dashboard" [ref=f1e20] [cursor=pointer]:
+          - /url: /dashboard/overview
+  - generic [ref=f1e24]:
+    - main [ref=f1e25]:
+      - generic [ref=f1e31]:
+        - generic [ref=f1e32]:
+          - generic [ref=f1e33]: AI for Climate - Bangladesh
+          - heading "OceanSense" [level=1] [ref=f1e35]
+          - paragraph [ref=f1e36]: AI-Powered ENSO Early Flood Prediction
+          - paragraph [ref=f1e37]: Advanced AI and machine learning models for accurate flood risk assessment and early warning in Bangladesh.
+          - generic [ref=f1e38]:
+            - link [ref=f1e39] [cursor=pointer]:
+              - /url: /dashboard/overview
+              - button "Launch Dashboard" [ref=f1e40]
+            - link [ref=f1e43] [cursor=pointer]:
+              - /url: /#research
+              - button "View Research" [ref=f1e44]
+          - generic [ref=f1e45]:
+            - generic [ref=f1e46]:
+              - generic [ref=f1e49]: Data Period
+              - generic [ref=f1e50]: 1980-2024
+              - generic [ref=f1e51]: Global climate data
+            - generic [ref=f1e52]:
+              - generic [ref=f1e56]: Focus Region
+              - generic [ref=f1e57]: Bangladesh
+              - generic [ref=f1e58]: Brahmaputra basin
+            - generic [ref=f1e59]:
+              - generic [ref=f1e64]: Models
+              - generic [ref=f1e65]: 12+
+              - generic [ref=f1e66]: AI/ML models
+        - generic [ref=f1e67]:
+          - generic [ref=f1e103]: Early Warning
+          - generic [ref=f1e105]: AI Prediction
+          - generic [ref=f1e107]: Flood Risk
+      - generic [ref=f1e114]:
+        - generic [ref=f1e115]:
+          - heading "Research Highlights" [level=2] [ref=f1e118]
+          - paragraph [ref=f1e120]: Cutting-edge AI research for flood early warning systems
+        - generic [ref=f1e121]:
+          - generic [ref=f1e123]:
+            - heading "Real Climate Data" [level=3] [ref=f1e127]
+            - paragraph [ref=f1e128]: Historical climate data from 1980 to 2024 using rainfall, satellite, and ocean observations.
+          - generic [ref=f1e130]:
+            - heading "ENSO Forecasting" [level=3] [ref=f1e136]
+            - paragraph [ref=f1e137]: Advanced ONI and Nino 3.4 forecasting with machine learning and deep learning models.
+          - generic [ref=f1e139]:
+            - heading "Hybrid AI Models" [level=3] [ref=f1e149]
+            - paragraph [ref=f1e150]: XGBoost and LSTM pipelines combine global signals with local river behavior.
+          - generic [ref=f1e152]:
+            - heading "Flood Prediction" [level=3] [ref=f1e158]
+            - paragraph [ref=f1e159]: Precise water level prediction with station thresholds and confidence-aware risk labels.
+          - generic [ref=f1e161]:
+            - heading "Early Warning" [level=3] [ref=f1e165]
+            - paragraph [ref=f1e166]: AI-based early warnings for communities and officials before flood risk escalates.
+          - generic [ref=f1e168]:
+            - heading "Bangladesh Focus" [level=3] [ref=f1e174]
+            - paragraph [ref=f1e175]: Tailored for Bangladesh river systems using local data and monitoring stations.
+      - generic [ref=f1e178]:
+        - generic [ref=f1e179]:
+          - heading "AI Pipeline" [level=2] [ref=f1e182]
+          - paragraph [ref=f1e184]: From global climate data to community action
+        - generic [ref=f1e187]:
+          - generic [ref=f1e189]:
+            - generic [ref=f1e195]: "01"
+            - heading "Global Climate Data" [level=3] [ref=f1e196]
+            - paragraph [ref=f1e197]: Historical ENSO indices and climate patterns.
+          - generic [ref=f1e199]:
+            - generic [ref=f1e205]: "02"
+            - heading "Local Climate Factors" [level=3] [ref=f1e206]
+            - paragraph [ref=f1e207]: Rainfall, soil moisture, and station variables.
+          - generic [ref=f1e209]:
+            - generic [ref=f1e214]: "03"
+            - heading "Flood Risk Analysis" [level=3] [ref=f1e215]
+            - paragraph [ref=f1e216]: Risk classification and threshold analysis.
+          - generic [ref=f1e218]:
+            - generic [ref=f1e233]: "04"
+            - heading "ENSO Prediction" [level=3] [ref=f1e234]
+            - paragraph [ref=f1e235]: Machine learning-based ENSO forecasting.
+          - generic [ref=f1e237]:
+            - generic [ref=f1e244]: "05"
+            - heading "Water Level Forecast" [level=3] [ref=f1e245]
+            - paragraph [ref=f1e246]: Hybrid XGBoost and LSTM model predictions.
+          - generic [ref=f1e248]:
+            - generic [ref=f1e256]: "06"
+            - heading "Community Advisory" [level=3] [ref=f1e257]
+            - paragraph [ref=f1e258]: Actionable guidance for officials and communities.
+        - paragraph [ref=f1e265]: The pipeline connects climate ingestion, model inference, station risk analysis, and advisory output without changing the dashboard data contracts.
+      - generic [ref=f1e267]:
+        - generic [ref=f1e268]:
+          - heading "Platform Capabilities" [level=2] [ref=f1e271]
+          - paragraph [ref=f1e273]: Comprehensive tools for climate intelligence and flood risk management
+        - generic [ref=f1e274]:
+          - generic [ref=f1e276]:
+            - heading "Global ENSO Prediction" [level=3] [ref=f1e281]
+            - paragraph [ref=f1e282]: Forecasts ENSO conditions months in advance.
+          - generic [ref=f1e284]:
+            - heading "Flood Prediction" [level=3] [ref=f1e289]
+            - paragraph [ref=f1e290]: Water level forecasting with confidence intervals.
+          - generic [ref=f1e292]:
+            - heading "Climate Analytics" [level=3] [ref=f1e296]
+            - paragraph [ref=f1e297]: Climate pattern and trend analysis.
+          - generic [ref=f1e299]:
+            - heading "Interactive Dashboard" [level=3] [ref=f1e306]
+            - paragraph [ref=f1e307]: Real-time monitoring and forecast visualization.
+          - generic [ref=f1e309]:
+            - heading "AI Decision Support" [level=3] [ref=f1e319]
+            - paragraph [ref=f1e320]: Model-powered insights and recommendations.
+          - generic [ref=f1e322]:
+            - heading "Early Warning" [level=3] [ref=f1e326]
+            - paragraph [ref=f1e327]: Automated risk alerts and notifications.
+      - generic [ref=f1e329]:
+        - generic [ref=f1e330]:
+          - heading "Technology Stack" [level=2] [ref=f1e333]
+          - paragraph [ref=f1e335]: Built with modern technologies for performance and reliability
+        - generic [ref=f1e336]:
+          - generic [ref=f1e337]:
+            - generic [ref=f1e342]: FastAPI
+            - generic [ref=f1e343]: Backend
+          - generic [ref=f1e344]:
+            - generic [ref=f1e349]: React
+            - generic [ref=f1e350]: Frontend
+          - generic [ref=f1e351]:
+            - generic [ref=f1e357]: TypeScript
+            - generic [ref=f1e358]: Language
+          - generic [ref=f1e359]:
+            - generic [ref=f1e364]: XGBoost
+            - generic [ref=f1e365]: ML
+          - generic [ref=f1e366]:
+            - generic [ref=f1e376]: PyTorch
+            - generic [ref=f1e377]: Deep Learning
+          - generic [ref=f1e378]:
+            - generic [ref=f1e384]: SQLAlchemy
+            - generic [ref=f1e385]: Database
+          - generic [ref=f1e386]:
+            - generic [ref=f1e390]: Leaflet
+            - generic [ref=f1e391]: Maps
+          - generic [ref=f1e392]:
+            - generic [ref=f1e396]: Redis
+            - generic [ref=f1e397]: Caching
+          - generic [ref=f1e398]:
+            - generic [ref=f1e404]: Tailwind CSS
+            - generic [ref=f1e405]: Styling
+          - generic [ref=f1e406]:
+            - generic [ref=f1e411]: LSTM
+            - generic [ref=f1e412]: Forecasting
+      - generic [ref=f1e414]:
+        - generic [ref=f1e415]:
+          - heading "Interactive Bangladesh Map" [level=2] [ref=f1e418]
+          - paragraph [ref=f1e420]: Real-time monitoring stations across Bangladesh
+        - generic [ref=f1e421]:
+          - generic [ref=f1e423]:
+            - img [ref=f1e424]:
+              - generic [ref=f1e431] [cursor=pointer]:
+                - generic [ref=f1e433]: Jamalpur
+                - generic [ref=f1e434]: Jamalpur
+              - generic [ref=f1e439] [cursor=pointer]:
+                - generic [ref=f1e441]: Gaibandha
+                - generic [ref=f1e442]: Gaibandha
+              - generic [ref=f1e447] [cursor=pointer]:
+                - generic [ref=f1e449]: Kurigram
+                - generic [ref=f1e450]: Kurigram
+            - generic [ref=f1e451]:
+              - button "+" [ref=f1e452] [cursor=pointer]
+              - button "−" [ref=f1e453] [cursor=pointer]
+            - generic [ref=f1e459]:
+              - paragraph [ref=f1e460]: Risk Levels
+              - generic [ref=f1e461]: Low Risk
+              - generic [ref=f1e464]: Moderate
+              - generic [ref=f1e467]: High Risk
+          - generic [ref=f1e471]:
+            - generic [ref=f1e473] [cursor=pointer]:
+              - generic [ref=f1e475]:
+                - generic [ref=f1e476]:
+                  - text: Jamalpur
+                  - generic [ref=f1e477]: "- Jamalpur"
+                - generic [ref=f1e478]: Low Risk
+              - generic [ref=f1e481]:
+                - generic [ref=f1e482]: 16.99m
+                - generic [ref=f1e483]: Water Level
+                - generic [ref=f1e484]: Updated just now
+            - generic [ref=f1e490] [cursor=pointer]:
+              - generic [ref=f1e492]:
+                - generic [ref=f1e493]:
+                  - text: Gaibandha
+                  - generic [ref=f1e494]: "- Gaibandha"
+                - generic [ref=f1e495]: Moderate
+              - generic [ref=f1e498]:
+                - generic [ref=f1e499]: 17.60m
+                - generic [ref=f1e500]: Water Level
+                - generic [ref=f1e501]: Updated just now
+            - generic [ref=f1e507] [cursor=pointer]:
+              - generic [ref=f1e509]:
+                - generic [ref=f1e510]:
+                  - text: Kurigram
+                  - generic [ref=f1e511]: "- Kurigram"
+                - generic [ref=f1e512]: Low Risk
+              - generic [ref=f1e515]:
+                - generic [ref=f1e516]: 21.11m
+                - generic [ref=f1e517]: Water Level
+                - generic [ref=f1e518]: Updated just now
+            - generic [ref=f1e523]: Live - auto-updates every 8 s
+      - generic [ref=f1e527]:
+        - generic [ref=f1e528]:
+          - heading "Research" [level=2] [ref=f1e531]
+          - paragraph [ref=f1e533]: Comprehensive approach to flood early warning systems
+        - generic [ref=f1e534]:
+          - generic [ref=f1e539]:
+            - heading "Problem Statement" [level=3] [ref=f1e540]
+            - paragraph [ref=f1e541]: Bangladesh faces severe flooding risks due to unique geographical location and climate patterns. Traditional methods lack accuracy and lead time.
+          - generic [ref=f1e551]:
+            - heading "Methodology" [level=3] [ref=f1e552]
+            - paragraph [ref=f1e553]: Global ENSO prediction is combined with local discharge and climate features using XGBoost and LSTM for improved water level forecasting.
+          - generic [ref=f1e560]:
+            - heading "Datasets" [level=3] [ref=f1e561]
+            - paragraph [ref=f1e562]: Historical climate data from 1980 onward, including ENSO indices, water levels, and weather observations from multiple sources.
+          - generic [ref=f1e568]:
+            - heading "AI Models" [level=3] [ref=f1e569]
+            - paragraph [ref=f1e570]: An ensemble of machine learning models supports feature importance, sequence learning, and temporal pattern recognition.
+          - generic [ref=f1e576]:
+            - heading "Results" [level=3] [ref=f1e577]
+            - paragraph [ref=f1e578]: Improved flood prediction accuracy with advance warning capability for more effective community preparation.
+          - generic [ref=f1e585]:
+            - heading "Future Scope" [level=3] [ref=f1e586]
+            - paragraph [ref=f1e587]: Real-time satellite data, additional river systems, and mobile alerts can extend the platform for wider impact.
+    - contentinfo [ref=f1e588]:
+      - generic [ref=f1e589]:
+        - generic [ref=f1e590]:
+          - generic [ref=f1e591]:
+            - generic [ref=f1e592]: OceanSense
+            - paragraph [ref=f1e598]: AI-powered ENSO-based flood early warning system for Bangladesh, providing advanced climate intelligence and flood risk assessment.
+            - generic [ref=f1e599]:
+              - link "OceanSense social link" [ref=f1e600] [cursor=pointer]:
+                - /url: "#"
+              - link "OceanSense social link" [ref=f1e605] [cursor=pointer]:
+                - /url: "#"
+              - link "OceanSense social link" [ref=f1e609] [cursor=pointer]:
+                - /url: "#"
+              - link "OceanSense social link" [ref=f1e613] [cursor=pointer]:
+                - /url: "#"
+          - generic [ref=f1e617]:
+            - heading "Quick Links" [level=4] [ref=f1e618]
+            - list [ref=f1e619]:
+              - listitem [ref=f1e620]:
+                - link "Home" [ref=f1e621] [cursor=pointer]:
+                  - /url: /
+              - listitem [ref=f1e622]:
+                - link "Research" [ref=f1e623] [cursor=pointer]:
+                  - /url: /#research
+              - listitem [ref=f1e624]:
+                - link "AI Pipeline" [ref=f1e625] [cursor=pointer]:
+                  - /url: /#pipeline
+              - listitem [ref=f1e626]:
+                - link "Dashboard" [ref=f1e627] [cursor=pointer]:
+                  - /url: /dashboard/overview
+              - listitem [ref=f1e628]:
+                - link "About Us" [ref=f1e629] [cursor=pointer]:
+                  - /url: /#research-section
+          - generic [ref=f1e630]:
+            - heading "Resources" [level=4] [ref=f1e631]
+            - list [ref=f1e632]:
+              - listitem [ref=f1e633]:
+                - link "Documentation" [ref=f1e634] [cursor=pointer]:
+                  - /url: "#"
+              - listitem [ref=f1e635]:
+                - link "API Reference" [ref=f1e636] [cursor=pointer]:
+                  - /url: "#"
+              - listitem [ref=f1e637]:
+                - link "Publications" [ref=f1e638] [cursor=pointer]:
+                  - /url: "#"
+              - listitem [ref=f1e639]:
+                - link "Datasets" [ref=f1e640] [cursor=pointer]:
+                  - /url: "#"
+              - listitem [ref=f1e641]:
+                - link "GitHub" [ref=f1e642] [cursor=pointer]:
+                  - /url: "#"
+          - generic [ref=f1e643]:
+            - heading "Contact" [level=4] [ref=f1e644]
+            - list [ref=f1e645]:
+              - listitem [ref=f1e646]: University Research Lab
+              - listitem [ref=f1e647]: Bangladesh
+              - listitem [ref=f1e648]: oceansense@research.edu
+              - listitem [ref=f1e649]: +880 1234-567890
+          - generic [ref=f1e650]:
+            - heading "Stay Updated" [level=4] [ref=f1e651]
+            - paragraph [ref=f1e652]: Get the latest updates on our research and system developments.
+            - generic [ref=f1e653]:
+              - textbox "Enter your email" [ref=f1e654]
+              - button "Subscribe" [ref=f1e655] [cursor=pointer]
+        - generic [ref=f1e656]: (c) 2026 OceanSense. All rights reserved.

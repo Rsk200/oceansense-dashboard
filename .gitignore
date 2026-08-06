@@ -1,0 +1,35 @@
+# Node
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.coverage
+htmlcov/
+.env
+
+# Data and Models
+data/*.db
+data/*.csv
+models/**/*.json
+models/**/*.bin
+models/**/*.xgb
+models/**/*.h5
+models/**/*.pt
+
+# System
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/
+.gemini/
