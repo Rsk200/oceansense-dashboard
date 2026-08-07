@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import {
-  GraduationCap, Cpu, Users, Award,
+  Cpu, Users, Award,
   Waves, FlaskConical, Star, Mail
 } from 'lucide-react';
 import Navbar from '../components/layout/Navbar';
