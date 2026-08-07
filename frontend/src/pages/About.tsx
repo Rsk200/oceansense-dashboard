@@ -136,7 +136,7 @@ const StatsBanner = () => {
           <div className="text-4xl font-extrabold text-white mb-1.5 tracking-tight leading-none">
             {value}
           </div>
-          <div className="text-slate-400 text-[11px] uppercase tracking-[0.1em] font-semibold leading-snug">
+          <div className="text-slate-300 text-[12px] uppercase tracking-[0.15em] font-bold leading-snug">
             {label}
           </div>
         </motion.div>
@@ -230,7 +230,7 @@ const SupervisorCard = () => {
 
           {/* Info column */}
           <div className="flex-1 min-w-0 pt-1">
-            <p className="text-cyan-400 text-[11px] font-bold uppercase tracking-[0.16em] mb-3 font-mono">
+            <p className="text-cyan-400 text-[10px] font-bold uppercase tracking-[0.2em] mb-1 font-mono">
               {SUPERVISOR.role}
             </p>
             <h2 className="text-3xl md:text-4xl font-extrabold text-white tracking-tight mb-2 leading-tight">
@@ -239,14 +239,14 @@ const SupervisorCard = () => {
             <p className="text-slate-400 text-sm mb-5">{SUPERVISOR.title}</p>
 
             {/* Degree box */}
-            <div className="flex items-start gap-3 mb-6 p-4 rounded-xl
+            <div className="flex items-start gap-3 mb-6 p-4 md:p-5 rounded-xl
               bg-white/[0.04] border border-white/8">
-              <GraduationCap className="w-4 h-4 text-cyan-400 flex-shrink-0 mt-0.5" />
+              <img src="/ulab-logo.svg" className="w-5 h-5 opacity-80 mt-0.5" alt="ULAB" />
               <p className="text-slate-300 text-sm leading-relaxed">{SUPERVISOR.degree}</p>
             </div>
 
             {/* Bio */}
-            <p className="text-slate-300 text-[15px] leading-[1.75] mb-7">
+            <p className="text-slate-300 text-[15px] leading-[2] mb-7">
               {SUPERVISOR.bio}
             </p>
 
@@ -347,10 +347,10 @@ const MemberCard = ({ person, index }: { person: Person; index: number }) => {
 
         {/* Role + Bio */}
         <div className="flex-1">
-          <p className="text-cyan-400 text-[10px] font-bold uppercase tracking-[0.15em] mb-3 font-mono">
+          <p className="text-cyan-400 text-[10px] font-bold uppercase tracking-[0.2em] mb-3 font-mono">
             {person.role}
           </p>
-          <p className="text-slate-300 text-[13.5px] leading-[1.7]">
+          <p className="text-slate-300 text-[13.5px] leading-[1.85]">
             {person.bio}
           </p>
         </div>
@@ -389,11 +389,14 @@ const AffiliationSection = () => {
         style={{ background: 'radial-gradient(circle, rgba(0,212,255,0.07), transparent 70%)' }} />
 
       <div className="relative p-12 md:p-16">
-        {/* Icon */}
-        <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-7
-          bg-cyan-500/10 border border-cyan-400/20
-          shadow-[0_0_30px_rgba(0,212,255,0.1)]">
-          <GraduationCap className="w-8 h-8 text-cyan-400" />
+        {/* Logo */}
+        <div className="inline-flex items-center justify-center h-[90px] mb-8 overflow-hidden rounded-xl bg-white/[0.02] border border-white/5 p-4 md:px-8 shadow-[0_0_40px_rgba(0,212,255,0.05)]">
+          <img 
+            src="/ulab-logo.svg" 
+            alt="ULAB Logo" 
+            className="h-full w-auto object-contain"
+            style={{ filter: 'brightness(0) invert(1) opacity(0.95)' }}
+          />
         </div>
 
         <h3 className="text-2xl md:text-3xl font-extrabold text-white mb-2 tracking-tight">
