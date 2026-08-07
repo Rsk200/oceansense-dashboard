@@ -4,7 +4,7 @@ import { ZoomIn, ZoomOut, Navigation } from 'lucide-react';
 
 // Coordinates
 const BANGLADESH = { lat: 23.6850, lng: 90.3563 };
-const PACIFIC_EQUATOR = { lat: 0, lng: -140 };
+const PACIFIC_HUB = { lat: 0, lng: -140 };
 
 const GlobeAnimation = () => {
   const globeEl = useRef<any>(null);
@@ -38,10 +38,10 @@ const GlobeAnimation = () => {
     }
   }, [dimensions.width, isInteracting]);
 
-  // Initial flight to Bangladesh
+  // Initial flight to show the data link from Pacific to Bangladesh
   useEffect(() => {
     if (globeEl.current) {
-      globeEl.current.pointOfView({ lat: BANGLADESH.lat - 5, lng: BANGLADESH.lng + 10, altitude: 2.0 }, 2000);
+      globeEl.current.pointOfView({ lat: BANGLADESH.lat - 5, lng: BANGLADESH.lng + 30, altitude: 2.2 }, 2000);
     }
   }, []);
 
@@ -65,57 +65,42 @@ const GlobeAnimation = () => {
 
   const resetView = () => {
     handleUserInteraction();
-    globeEl.current?.pointOfView({ lat: BANGLADESH.lat - 5, lng: BANGLADESH.lng + 10, altitude: 2.0 }, 1500);
+    globeEl.current?.pointOfView({ lat: BANGLADESH.lat - 5, lng: BANGLADESH.lng + 30, altitude: 2.2 }, 1500);
   };
 
-  // --- GENERATE STUNNING HYBRID PARTICLES ---
-  const { arcsData, ringsData } = useMemo(() => {
-    const arcs = [];
+  // --- OCEAN SENSE: CLEAN, PROFESSIONAL DATA VISUALIZATION ---
+  const { arcsData, ringsData, pointsData } = useMemo(() => {
     
-    // 1. Pacific Ocean Heat & Cold Anomaly Currents (Beautiful hybrid flow)
-    for (let i = 0; i < 250; i++) {
-      const isWarm = Math.random() > 0.5; // 50% warm currents, 50% cold currents
-      
-      const startLng = -190 + Math.random() * 120;
-      // Warm flows East, Cold flows West
-      const endLng = isWarm ? startLng + 20 + Math.random() * 30 : startLng - 20 - Math.random() * 30; 
-      const lat = (Math.random() - 0.5) * 30; // Hug Equator
-      
-      arcs.push({
-        startLat: lat, startLng, endLat: lat + (Math.random() - 0.5) * 8, endLng,
-        color: isWarm 
-          ? ['rgba(255, 69, 0, 0)', 'rgba(255, 69, 0, 0.8)'] // Fiery Red
-          : ['rgba(0, 242, 254, 0)', 'rgba(0, 194, 255, 0.8)'], // Deep Cyan
-        alt: 0.01 + Math.random() * 0.03, // Surface level
-        speed: 1500 + Math.random() * 2500,
-        dashLength: 0.1, dashGap: 2.5, stroke: 0.3
-      });
-    }
-
-    // 2. Atmospheric Teleconnection (Winds carrying impact to BD)
+    // 1. Ocean Sensors (Scattered dots in the ocean representing data collection)
+    const sensors = [];
     for (let i = 0; i < 40; i++) {
-      const isWarm = Math.random() > 0.5;
-      arcs.push({
-        startLat: PACIFIC_EQUATOR.lat + (Math.random() - 0.5) * 40,
-        startLng: PACIFIC_EQUATOR.lng + (Math.random() - 0.5) * 60,
-        endLat: BANGLADESH.lat + (Math.random() - 0.5) * 15,
-        endLng: BANGLADESH.lng + (Math.random() - 0.5) * 15,
-        color: isWarm 
-          ? ['rgba(255, 69, 0, 0)', 'rgba(255, 0, 85, 0.9)'] // Red Alert
-          : ['rgba(0, 242, 254, 0)', 'rgba(0, 255, 204, 0.9)'], // Monsoon Cyan
-        alt: 0.15 + Math.random() * 0.3, // High altitude winds
-        speed: 2500 + Math.random() * 2500,
-        dashLength: 0.2, dashGap: 4, stroke: 0.5
+      sensors.push({
+        lat: (Math.random() - 0.5) * 60,
+        lng: -190 + Math.random() * 120, // Pacific/Indian Ocean
+        size: 0.05 + Math.random() * 0.1,
+        color: 'rgba(0, 242, 254, 0.6)' // Sleek cyan
       });
     }
 
-    // 3. Bangladesh Impact Ring (Subtle Warning)
-    const rings = [
-      { ...BANGLADESH, color: '#ff0055', maxR: 4, propagationSpeed: 3, repeatPeriod: 1500 },
-      { ...BANGLADESH, color: '#00c2ff', maxR: 6, propagationSpeed: 2, repeatPeriod: 2000 }
+    // Add explicit hubs
+    sensors.push({ ...PACIFIC_HUB, size: 0.3, color: '#00f2fe' });
+    sensors.push({ ...BANGLADESH, size: 0.2, color: '#00f2fe' });
+
+    // 2. Data Links (Elegant, minimal arcs connecting sensors to AI in BD)
+    const links = [
+      { startLat: PACIFIC_HUB.lat, startLng: PACIFIC_HUB.lng, endLat: BANGLADESH.lat, endLng: BANGLADESH.lng, speed: 2500 },
+      { startLat: 15, startLng: -110, endLat: BANGLADESH.lat, endLng: BANGLADESH.lng, speed: 3000 },
+      { startLat: -10, startLng: -160, endLat: BANGLADESH.lat, endLng: BANGLADESH.lng, speed: 2800 },
+      { startLat: -20, startLng: 100, endLat: BANGLADESH.lat, endLng: BANGLADESH.lng, speed: 2000 }, // Indian Ocean
+    ];
+
+    // 3. Radar Ripples (Sensing zones)
+    const ripples = [
+      { lat: PACIFIC_HUB.lat, lng: PACIFIC_HUB.lng, maxR: 15, propagationSpeed: 1.5, repeatPeriod: 2500, color: 'rgba(0, 242, 254, 0.3)' },
+      { lat: BANGLADESH.lat, lng: BANGLADESH.lng, maxR: 6, propagationSpeed: 2, repeatPeriod: 1500, color: 'rgba(0, 242, 254, 0.5)' },
     ];
       
-    return { arcsData: arcs, ringsData: rings };
+    return { arcsData: links, ringsData: ripples, pointsData: sensors };
   }, []);
 
   return (
@@ -126,14 +111,13 @@ const GlobeAnimation = () => {
       onTouchStart={handleUserInteraction}
     >
       
-      {/* Dynamic Background Ambient Glow (Hybrid colors) */}
+      {/* Sleek, professional ambient glow */}
       <div className="absolute inset-[15%] rounded-full bg-blue-900/10 blur-[80px] pointer-events-none" />
-      <div className="absolute right-[5%] top-[20%] h-[60%] w-[40%] rounded-full bg-[#ff4500]/10 blur-[80px] pointer-events-none" />
-      <div className="absolute left-[10%] bottom-[10%] h-[40%] w-[40%] rounded-full bg-[#00c2ff]/10 blur-[80px] pointer-events-none" />
+      <div className="absolute right-[10%] top-[20%] h-[60%] w-[40%] rounded-full bg-[#00c2ff]/10 blur-[80px] pointer-events-none" />
       
-      {/* Outer orbital tech rings */}
-      <div className="absolute inset-[8%] rounded-full border border-white/5 border-dashed animate-[spin_80s_linear_infinite] pointer-events-none" />
-      <div className="absolute inset-[14%] rounded-full border border-[#00c2ff]/10 animate-[spin_60s_linear_infinite_reverse] pointer-events-none" />
+      {/* Minimal Outer Rings */}
+      <div className="absolute inset-[8%] rounded-full border border-white/5 border-dashed animate-[spin_120s_linear_infinite] pointer-events-none" />
+      <div className="absolute inset-[14%] rounded-full border border-[#00c2ff]/10 animate-[spin_90s_linear_infinite_reverse] pointer-events-none" />
       
       {/* Ultra-minimal Navigation Controls */}
       <div className="absolute bottom-4 right-4 z-30 flex gap-2 opacity-50 transition-opacity hover:opacity-100">
@@ -185,21 +169,30 @@ const GlobeAnimation = () => {
             showGraticules={true}
             animateIn={true}
             
+            // Sensors (Points)
+            pointsData={pointsData}
+            pointColor={(d: any) => d.color}
+            pointAltitude={0.01}
+            pointRadius={(d: any) => d.size}
+            pointsMerge={true}
+            
+            // Radar Ripples (Rings)
             ringsData={ringsData}
             ringColor={(d: any) => d.color}
             ringMaxRadius={(d: any) => d.maxR}
             ringPropagationSpeed={(d: any) => d.propagationSpeed}
             ringRepeatPeriod={(d: any) => d.repeatPeriod}
             
+            // Data Links (Clean Arcs)
             arcsData={arcsData}
-            arcColor={(d: any) => d.color}
-            arcAltitude={(d: any) => d.alt}
-            arcDashLength={(d: any) => d.dashLength}
-            arcDashGap={(d: any) => d.dashGap}
-            arcDashInitialGap={() => Math.random() * 5}
+            arcColor={() => ['rgba(255, 255, 255, 0.1)', 'rgba(0, 242, 254, 1)']} // Sleek White to Cyan
+            arcAltitude={0.25} // Higher elegant arcs
+            arcDashLength={0.4}
+            arcDashGap={2} // Only 1 dash visible at a time per link
+            arcDashInitialGap={() => Math.random() * 2}
             arcDashAnimateTime={(d: any) => d.speed}
             arcsTransitionDuration={1000}
-            arcStroke={(d: any) => d.stroke}
+            arcStroke={0.5} // Thin, sharp, professional
           />
         )}
       </div>
