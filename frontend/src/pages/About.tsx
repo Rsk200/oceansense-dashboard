@@ -451,7 +451,7 @@ const About = () => {
   const heroInView = useInView(heroRef, { once: true });
 
   return (
-    <div className="min-h-screen overflow-hidden" style={{ background: '#040d1c' }}>
+    <div className="min-h-screen overflow-x-hidden" style={{ background: '#040d1c' }}>
       <Navbar />
 
       <main className="pt-28 pb-28">

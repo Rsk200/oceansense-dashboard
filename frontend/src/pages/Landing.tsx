@@ -17,7 +17,7 @@ import Research from '../components/landing/Research';
  */
 const Landing = () => {
   return (
-    <div className="min-h-screen overflow-hidden bg-ocean-radial">
+    <div className="min-h-screen overflow-x-hidden bg-ocean-radial">
       <main>
         <Hero />
         <BangladeshMap />
