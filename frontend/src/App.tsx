@@ -57,7 +57,7 @@ function AnimatedRoutes() {
             }
           />
           <Route
-            path="forecast"
+            path="enso"
             element={
               <Suspense fallback={<PageFallback />}>
                 <EnsoForecast />
