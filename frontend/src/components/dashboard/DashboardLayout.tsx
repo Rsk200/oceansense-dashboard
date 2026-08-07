@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
-import { Menu, Loader2 } from 'lucide-react';
+import { Menu, Loader2, Waves } from 'lucide-react';
 import Sidebar from '../layout/Sidebar';
 import Button from '../ui/Button';
 import { useBootstrapForecast } from '../../hooks/queries';
