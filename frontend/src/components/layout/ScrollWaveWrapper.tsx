@@ -1,4 +1,3 @@
-import { useRef } from 'react';
 import { motion, useScroll, useVelocity, useSpring, useTransform, useReducedMotion } from 'framer-motion';
 
 /**
