@@ -5,6 +5,7 @@ import { ErrorBoundary } from './components/common/ErrorBoundary';
 import { Toast } from './components/common/Toast';
 import Navbar from './components/layout/Navbar';
 import ScrollProgress from './components/common/ScrollProgress';
+import SmoothScroll from './components/layout/SmoothScroll';
 import LoadingSpinner from './components/common/LoadingSpinner';
 import Landing from './pages/Landing';
 import About from './pages/About';
@@ -38,10 +39,11 @@ function App() {
   return (
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
-        <BrowserRouter>
-          <div className="min-h-screen">
-            <Navbar />
-            <ScrollProgress />
+        <SmoothScroll>
+          <BrowserRouter>
+            <div className="min-h-screen">
+              <Navbar />
+              <ScrollProgress />
             <Toast />
             <Routes>
               <Route path="/" element={<Landing />} />
@@ -121,6 +123,7 @@ function App() {
             </Routes>
           </div>
         </BrowserRouter>
+        </SmoothScroll>
       </QueryClientProvider>
     </ErrorBoundary>
   );
