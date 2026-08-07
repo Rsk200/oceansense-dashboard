@@ -8,7 +8,7 @@
  */
 
 import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
-import { motion, useReducedMotion, type Variants } from 'framer-motion';
+import { motion, useReducedMotion, useScroll, useTransform, type Variants } from 'framer-motion';
 import { geoMercator, geoPath } from 'd3-geo';
 import bangladeshRaw from '../../assets/bangladesh.geojson?raw';
 import { useFloodRisk } from '../../hooks/queries';
@@ -452,9 +452,22 @@ const BangladeshMap = () => {
     show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: 'easeOut' } },
   };
 
+  const containerRef = useRef<HTMLDivElement>(null);
+  
+  // Apple-style Parallax Scale & Y-Transform based on scroll position
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"]
+  });
+  
+  const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.95, 1, 0.95]);
+  const y = useTransform(scrollYProgress, [0, 1], [50, -50]);
+  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0.3, 1, 1, 0.3]);
+
   return (
     <motion.section
       id="map"
+      ref={containerRef}
       className="section-rule py-16 lg:py-20 relative overflow-hidden"
       initial="hidden"
       whileInView="show"
@@ -462,11 +475,11 @@ const BangladeshMap = () => {
       variants={sectionVariants}
       transition={{ duration: 0.6, ease: 'easeOut' }}
     >
-      {/* Ambient glow */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+      {/* Ambient glow with parallax */}
+      <motion.div style={{ y }} className="absolute inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] rounded-full opacity-8"
           style={{ background: 'radial-gradient(ellipse, rgba(0,194,255,0.8) 0%, transparent 70%)' }} />
-      </div>
+      </motion.div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
@@ -483,11 +496,17 @@ const BangladeshMap = () => {
           </p>
         </motion.div>
 
-        {/* Main panel */}
+        {/* Main panel with Parallax Scale & Opacity */}
         <motion.div
-          variants={itemVariants}
+          style={{ 
+            scale, 
+            opacity, 
+            y: prefersReducedMotion ? 0 : y,
+            background: 'rgba(5,12,42,0.94)', 
+            backdropFilter: 'blur(16px)', 
+            minHeight: 420 
+          }}
           className="panel-glow rounded-lg border border-white/10 overflow-hidden flex flex-col lg:flex-row"
-          style={{ background: 'rgba(5,12,42,0.94)', backdropFilter: 'blur(16px)', minHeight: 420 }}
         >
           {/* Map */}
           <div className="relative flex-1 min-h-[320px] lg:min-h-0">
