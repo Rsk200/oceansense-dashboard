@@ -4,13 +4,11 @@ import Lenis from 'lenis';
 export default function SmoothScroll({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const lenis = new Lenis({
-      duration: 1.5, // slightly slower for a more premium, buttery feel
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      orientation: 'vertical',
-      gestureOrientation: 'vertical',
+      lerp: 0.06, // Creates a very heavy, luxurious, buttery smooth friction
+      wheelMultiplier: 0.8, // Slightly slows down the wheel for a premium heavy feel
       smoothWheel: true,
-      wheelMultiplier: 1.0,
-      touchMultiplier: 2,
+      touchMultiplier: 1.5, // Better touch feeling
+      syncTouch: true, // Makes touch scrolling smooth too
     });
 
     function raf(time: number) {
