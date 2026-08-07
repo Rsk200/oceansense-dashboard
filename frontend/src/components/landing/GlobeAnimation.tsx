@@ -1,18 +1,38 @@
 import { useEffect, useRef, useState } from 'react';
 import Globe from 'react-globe.gl';
+import { ZoomIn, ZoomOut } from 'lucide-react';
 
 // Bangladesh Coordinates (Target)
 const BANGLADESH = { lat: 23.6850, lng: 90.3563 };
 // Pacific El Nino Region (Source)
 const PACIFIC = { lat: 0, lng: -120 };
 
-// ENSO Data Streams (Pacific Ocean to Bangladesh)
+// Main ENSO Data Streams
 const ENSO_ARCS = [
-  { startLat: PACIFIC.lat, startLng: PACIFIC.lng, endLat: BANGLADESH.lat, endLng: BANGLADESH.lng },
-  { startLat: 5, startLng: -110, endLat: BANGLADESH.lat, endLng: BANGLADESH.lng },
-  { startLat: -10, startLng: -140, endLat: BANGLADESH.lat, endLng: BANGLADESH.lng },
-  { startLat: -5, startLng: 130, endLat: BANGLADESH.lat, endLng: BANGLADESH.lng }, // Indian ocean currents
+  { startLat: PACIFIC.lat, startLng: PACIFIC.lng, endLat: BANGLADESH.lat, endLng: BANGLADESH.lng, isMain: true },
+  { startLat: 5, startLng: -110, endLat: BANGLADESH.lat, endLng: BANGLADESH.lng, isMain: true },
+  { startLat: -10, startLng: -140, endLat: BANGLADESH.lat, endLng: BANGLADESH.lng, isMain: true },
 ];
+
+// Generate dynamic wind/atmospheric flow particles
+const WIND_PARTICLES = Array.from({ length: 40 }).map(() => {
+  // 70% chance to originate from Pacific (ENSO flow), 30% from Indian Ocean
+  const isPacific = Math.random() > 0.3; 
+  const startLat = isPacific ? (Math.random() - 0.5) * 60 : -15 + Math.random() * 30;
+  const startLng = isPacific ? -170 + Math.random() * 100 : 50 + Math.random() * 40;
+  
+  return {
+    startLat,
+    startLng,
+    endLat: BANGLADESH.lat + (Math.random() - 0.5) * 10,
+    endLng: BANGLADESH.lng + (Math.random() - 0.5) * 10,
+    isMain: false,
+    alt: 0.05 + Math.random() * 0.2, // Varied heights for 3D depth
+    speed: 1500 + Math.random() * 2000,
+  };
+});
+
+const ALL_ARCS = [...ENSO_ARCS, ...WIND_PARTICLES];
 
 const GlobeAnimation = () => {
   const globeEl = useRef<any>(null);
@@ -25,7 +45,7 @@ const GlobeAnimation = () => {
       const controls = globeEl.current.controls();
       controls.autoRotate = true;
       controls.autoRotateSpeed = 1.0;
-      controls.enableZoom = false;
+      controls.enableZoom = false; // Disable scroll zoom so landing page scrolls smoothly
       
       // Center directly on Bangladesh on load with a smooth zoom-in animation
       globeEl.current.pointOfView({ lat: BANGLADESH.lat, lng: BANGLADESH.lng, altitude: 1.8 }, 2000);
@@ -49,6 +69,14 @@ const GlobeAnimation = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  const handleZoom = (direction: 'in' | 'out') => {
+    if (globeEl.current) {
+      const currentAltitude = globeEl.current.pointOfView().altitude;
+      const newAltitude = direction === 'in' ? Math.max(0.5, currentAltitude * 0.7) : Math.min(4, currentAltitude * 1.3);
+      globeEl.current.pointOfView({ altitude: newAltitude }, 600);
+    }
+  };
+
   return (
     <div ref={containerRef} className="relative aspect-square w-full flex items-center justify-center">
       
@@ -61,6 +89,24 @@ const GlobeAnimation = () => {
       <div className="absolute inset-[14%] rounded-full border border-[#00c2ff]/15 animate-[spin_60s_linear_infinite_reverse] pointer-events-none" />
       <div className="absolute inset-[20%] rounded-full border border-accent/10 border-dotted animate-[spin_40s_linear_infinite] pointer-events-none" />
 
+      {/* Zoom Controls */}
+      <div className="absolute bottom-4 right-4 z-30 flex flex-col gap-1 rounded-lg border border-white/10 bg-[#041C3E]/60 p-1.5 shadow-xl backdrop-blur-md">
+        <button
+          onClick={() => handleZoom('in')}
+          className="rounded p-1.5 text-white/70 transition-colors hover:bg-white/10 hover:text-white"
+          aria-label="Zoom in"
+        >
+          <ZoomIn className="h-4 w-4" />
+        </button>
+        <button
+          onClick={() => handleZoom('out')}
+          className="rounded p-1.5 text-white/70 transition-colors hover:bg-white/10 hover:text-white"
+          aria-label="Zoom out"
+        >
+          <ZoomOut className="h-4 w-4" />
+        </button>
+      </div>
+
       {/* The 3D WebGL Globe */}
       <div className="relative z-10 cursor-grab active:cursor-grabbing flex items-center justify-center">
         {dimensions.width > 0 && (
@@ -68,7 +114,6 @@ const GlobeAnimation = () => {
             ref={globeEl}
             width={dimensions.width * 0.88}
             height={dimensions.width * 0.88}
-            // Using blue marble for a vibrant, gorgeous living planet
             globeImageUrl="//unpkg.com/three-globe/example/img/earth-blue-marble.jpg"
             bumpImageUrl="//unpkg.com/three-globe/example/img/earth-topology.png"
             backgroundColor="rgba(0,0,0,0)"
@@ -86,15 +131,16 @@ const GlobeAnimation = () => {
             ringPropagationSpeed={(d: any) => d.propagationSpeed}
             ringRepeatPeriod={(d: any) => d.repeatPeriod}
             
-            // Fiery ENSO Data Streams (Shooting Comets)
-            arcsData={ENSO_ARCS}
-            arcColor={() => ['#ff4500', '#ff0055']} // Fiery orange to red alert
-            arcDashLength={0.3} // Short dash (comet)
-            arcDashGap={4} // Huge gap so it looks like a single packet flying
-            arcDashInitialGap={() => Math.random() * 2} // Random stagger
-            arcDashAnimateTime={2500}
+            // Atmospheric Flow & ENSO Streams
+            arcsData={ALL_ARCS}
+            arcColor={(d: any) => d.isMain ? ['#ff4500', '#ff0055'] : ['rgba(0,194,255,0.0)', 'rgba(0,255,204,0.8)']}
+            arcAltitude={(d: any) => d.alt || 0.2}
+            arcDashLength={(d: any) => d.isMain ? 0.3 : 0.15}
+            arcDashGap={(d: any) => d.isMain ? 4 : 2}
+            arcDashInitialGap={() => Math.random() * 5}
+            arcDashAnimateTime={(d: any) => d.speed || 2500}
             arcsTransitionDuration={0}
-            arcStroke={0.8} // Bolder comets
+            arcStroke={(d: any) => d.isMain ? 0.8 : 0.3}
           />
         )}
       </div>
