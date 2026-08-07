@@ -22,17 +22,17 @@ const RiskMapLeaflet = ({ stations, center = [25.5, 89.5], zoom = 7 }: RiskMapLe
   const createCustomIcon = (riskLabel: string) => {
     const color = getRiskColor(riskLabel as any);
     
+    // Add faster pulse for RED risk
+    const pulseClass = riskLabel === 'RED' ? 'animate-pulse' : 'animate-ping';
+    const pingSpeed = riskLabel === 'RED' ? 'animation-duration: 1s' : 'animation-duration: 2s';
+    
     return L.divIcon({
-      className: 'custom-marker',
+      className: 'custom-marker bg-transparent border-0',
       html: `
-        <div style="
-          background-color: ${color};
-          width: 24px;
-          height: 24px;
-          border-radius: 50%;
-          border: 3px solid white;
-          box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-        "></div>
+        <div class="relative flex h-6 w-6 justify-center items-center">
+          <span class="${pulseClass} absolute inline-flex h-full w-full rounded-full opacity-75" style="background-color: ${color}; ${pingSpeed}"></span>
+          <span class="relative inline-flex rounded-full h-5 w-5 border-2 border-white shadow-[0_0_10px_rgba(0,0,0,0.5)]" style="background-color: ${color}"></span>
+        </div>
       `,
       iconSize: [24, 24],
       iconAnchor: [12, 12],

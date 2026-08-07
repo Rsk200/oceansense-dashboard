@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Card, CardHeader, CardTitle, CardContent } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
@@ -47,6 +47,22 @@ const ForecastHistory = () => {
   const [stationFilter, setStationFilter] = useState<'all' | StationId>('all');
   const [dateRange, setDateRange] = useState({ start: '', end: '' });
   const toast = useToast();
+
+  useEffect(() => {
+    const handleUpdate = () => setRecords(getForecastHistory());
+    window.addEventListener('forecast_history_updated', handleUpdate);
+    
+    // Also listen to storage events from other tabs
+    const handleStorage = (e: StorageEvent) => {
+      if (e.key === 'oceansense_forecast_history') handleUpdate();
+    };
+    window.addEventListener('storage', handleStorage);
+    
+    return () => {
+      window.removeEventListener('forecast_history_updated', handleUpdate);
+      window.removeEventListener('storage', handleStorage);
+    };
+  }, []);
 
   const allRows = useMemo(() => flattenRecords(records), [records]);
 
@@ -131,138 +147,179 @@ const ForecastHistory = () => {
         </div>
       </div>
 
-      {/* Summary */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card>
-          <CardContent className="text-center p-4">
-            <div className="text-3xl font-bold text-accent mb-2">{stats.totalRuns}</div>
-            <div className="text-white/60 text-sm">Forecast Runs</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="text-center p-4">
-            <div className="text-3xl font-bold text-success mb-2">{stats.totalRows}</div>
-            <div className="text-white/60 text-sm">Total Data Points</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="text-center p-4">
-            <div className="text-3xl font-bold text-warning mb-2">{stats.riskCounts.YELLOW || 0}</div>
-            <div className="text-white/60 text-sm">Yellow-Risk Points</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="text-center p-4">
-            <div className="text-3xl font-bold text-danger mb-2">{stats.riskCounts.RED || 0}</div>
-            <div className="text-white/60 text-sm">Red-Risk Points</div>
-          </CardContent>
-        </Card>
+      {/* Summary KPIs */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.3 }}
+          className="glass rounded-xl p-6 border border-white/5 relative overflow-hidden"
+        >
+          <div className="absolute -right-8 -top-8 w-32 h-32 rounded-full blur-[40px] opacity-10 bg-accent" />
+          <div className="relative z-10 text-center">
+            <div className="text-4xl font-black tracking-tight text-accent mb-1">{stats.totalRuns}</div>
+            <div className="text-xs uppercase tracking-wider font-semibold text-white/50">Forecast Runs</div>
+          </div>
+        </motion.div>
+        
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.3, delay: 0.1 }}
+          className="glass rounded-xl p-6 border border-white/5 relative overflow-hidden"
+        >
+          <div className="absolute -right-8 -top-8 w-32 h-32 rounded-full blur-[40px] opacity-10 bg-success" />
+          <div className="relative z-10 text-center">
+            <div className="text-4xl font-black tracking-tight text-success mb-1">{stats.totalRows}</div>
+            <div className="text-xs uppercase tracking-wider font-semibold text-white/50">Data Points</div>
+          </div>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.3, delay: 0.2 }}
+          className={`glass rounded-xl p-6 border relative overflow-hidden ${stats.riskCounts.YELLOW ? 'border-warning/30' : 'border-white/5'}`}
+        >
+          {!!stats.riskCounts.YELLOW && <div className="absolute -right-8 -top-8 w-32 h-32 rounded-full blur-[40px] opacity-10 bg-warning" />}
+          <div className="relative z-10 text-center">
+            <div className={`text-4xl font-black tracking-tight mb-1 ${stats.riskCounts.YELLOW ? 'text-warning' : 'text-white/30'}`}>
+              {stats.riskCounts.YELLOW || 0}
+            </div>
+            <div className="text-xs uppercase tracking-wider font-semibold text-white/50">Yellow Alerts</div>
+          </div>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.3, delay: 0.3 }}
+          className={`glass rounded-xl p-6 border relative overflow-hidden ${stats.riskCounts.RED ? 'border-danger/30' : 'border-white/5'}`}
+        >
+          {!!stats.riskCounts.RED && <div className="absolute -right-8 -top-8 w-32 h-32 rounded-full blur-[40px] opacity-10 bg-danger" />}
+          <div className="relative z-10 text-center">
+            <div className={`text-4xl font-black tracking-tight mb-1 ${stats.riskCounts.RED ? 'text-danger' : 'text-white/30'}`}>
+              {stats.riskCounts.RED || 0}
+            </div>
+            <div className="text-xs uppercase tracking-wider font-semibold text-white/50">Red Alerts</div>
+          </div>
+        </motion.div>
       </div>
 
       {/* Filters */}
-      <Card>
-        <CardContent className="p-4">
-          <div className="flex flex-wrap items-center gap-4">
+      <div className="glass rounded-xl p-4 border border-white/5">
+        <div className="flex flex-wrap items-center gap-6">
+          <div className="flex items-center space-x-3">
+            <Filter className="w-4 h-4 text-accent" />
             <div className="flex items-center space-x-2">
-              <Filter className="w-4 h-4 text-white/50" />
-              <label className="text-white/70 text-sm">Type:</label>
+              <label className="text-white/50 text-xs font-mono uppercase tracking-wider">Type:</label>
               <select
                 value={typeFilter}
                 onChange={(e) => setTypeFilter(e.target.value as typeof typeFilter)}
-                className="bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-accent"
+                className="bg-white/5 border border-white/10 hover:border-white/20 rounded-lg px-3 py-1.5 text-white text-sm focus:outline-none focus:ring-1 focus:ring-accent transition-colors"
               >
-                <option value="all">All Types</option>
-                <option value="enso">ENSO Forecast</option>
-                <option value="water-level">Water Level</option>
-                <option value="manual">Manual Prediction</option>
+                <option value="all" className="bg-[#041E42]">All Types</option>
+                <option value="enso" className="bg-[#041E42]">ENSO Forecast</option>
+                <option value="water-level" className="bg-[#041E42]">Water Level</option>
+                <option value="manual" className="bg-[#041E42]">Manual Prediction</option>
               </select>
             </div>
+          </div>
 
-            <div className="flex items-center space-x-2">
-              <label className="text-white/70 text-sm">Station:</label>
-              <select
-                value={stationFilter}
-                onChange={(e) => setStationFilter(e.target.value as typeof stationFilter)}
-                className="bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-accent"
-              >
-                <option value="all">All Stations</option>
-                <option value="Station-A">Station-A</option>
-                <option value="Station-B">Station-B</option>
-                <option value="Station-C">Station-C</option>
-              </select>
-            </div>
+          <div className="flex items-center space-x-2">
+            <label className="text-white/50 text-xs font-mono uppercase tracking-wider">Station:</label>
+            <select
+              value={stationFilter}
+              onChange={(e) => setStationFilter(e.target.value as typeof stationFilter)}
+              className="bg-white/5 border border-white/10 hover:border-white/20 rounded-lg px-3 py-1.5 text-white text-sm focus:outline-none focus:ring-1 focus:ring-accent transition-colors"
+            >
+              <option value="all" className="bg-[#041E42]">All Stations</option>
+              <option value="Station-A" className="bg-[#041E42]">Jamalpur</option>
+              <option value="Station-B" className="bg-[#041E42]">Gaibandha</option>
+              <option value="Station-C" className="bg-[#041E42]">Kurigram</option>
+            </select>
+          </div>
 
+          <div className="flex items-center space-x-4 border-l border-white/10 pl-6">
+            <Calendar className="w-4 h-4 text-accent" />
             <div className="flex items-center space-x-2">
-              <Calendar className="w-4 h-4 text-white/50" />
-              <label className="text-white/70 text-sm">From:</label>
+              <label className="text-white/50 text-xs font-mono uppercase tracking-wider">From:</label>
               <input
                 type="date"
                 value={dateRange.start}
                 onChange={(e) => setDateRange({ ...dateRange, start: e.target.value })}
-                className="bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-accent"
+                className="bg-white/5 border border-white/10 hover:border-white/20 rounded-lg px-3 py-1.5 text-white text-sm focus:outline-none focus:ring-1 focus:ring-accent transition-colors"
+                style={{ colorScheme: 'dark' }}
               />
             </div>
-
             <div className="flex items-center space-x-2">
-              <label className="text-white/70 text-sm">To:</label>
+              <label className="text-white/50 text-xs font-mono uppercase tracking-wider">To:</label>
               <input
                 type="date"
                 value={dateRange.end}
                 onChange={(e) => setDateRange({ ...dateRange, end: e.target.value })}
-                className="bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:ring-2 focus:ring-accent"
+                className="bg-white/5 border border-white/10 hover:border-white/20 rounded-lg px-3 py-1.5 text-white text-sm focus:outline-none focus:ring-1 focus:ring-accent transition-colors"
+                style={{ colorScheme: 'dark' }}
               />
             </div>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
       {/* History Table */}
-      <Card>
-        <CardHeader>
-          <div className="flex items-center space-x-2">
-            <History className="w-6 h-6 text-accent" />
-            <CardTitle>Forecast Records ({filteredRows.length})</CardTitle>
+      <div className="glass rounded-xl border border-white/5 overflow-hidden">
+        <div className="p-5 border-b border-white/5 bg-white/[0.02]">
+          <div className="flex items-center space-x-3">
+            <div className="p-2 bg-accent/20 rounded-lg">
+              <History className="w-5 h-5 text-accent" />
+            </div>
+            <h2 className="text-xl font-bold text-white">Forecast Records <span className="text-white/40 text-sm font-normal ml-2">({filteredRows.length} total)</span></h2>
           </div>
-        </CardHeader>
-        <CardContent>
+        </div>
+        
+        <div>
           {filteredRows.length === 0 ? (
-            <div className="text-center py-12 text-white/50 flex flex-col items-center gap-3">
-              <Inbox className="w-10 h-10 text-white/30" />
-              <p>No forecast records yet.</p>
+            <div className="text-center py-16 text-white/50 flex flex-col items-center gap-3">
+              <div className="p-4 bg-white/5 rounded-full mb-2">
+                <Inbox className="w-8 h-8 text-white/30" />
+              </div>
+              <p className="text-lg">No forecast records found</p>
               <p className="text-sm">
-                Run a forecast from the ENSO, Water Level, or Manual Prediction pages and it will show up here.
+                Try adjusting your filters, or run a new forecast from the ENSO or Water Level pages.
               </p>
             </div>
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full">
+              <table className="w-full text-left">
                 <thead>
-                  <tr className="border-b border-white/10">
-                    <th className="text-left text-white/70 text-sm font-medium p-3">Run Date</th>
-                    <th className="text-left text-white/70 text-sm font-medium p-3">Type</th>
-                    <th className="text-left text-white/70 text-sm font-medium p-3">Station</th>
-                    <th className="text-left text-white/70 text-sm font-medium p-3">Month</th>
-                    <th className="text-left text-white/70 text-sm font-medium p-3">Mode</th>
-                    <th className="text-left text-white/70 text-sm font-medium p-3">Nino3.4</th>
-                    <th className="text-left text-white/70 text-sm font-medium p-3">Water Level (m)</th>
-                    <th className="text-left text-white/70 text-sm font-medium p-3">Risk</th>
+                  <tr className="border-b border-white/10 bg-white/[0.01]">
+                    <th className="text-white/50 text-[11px] font-bold uppercase tracking-wider px-6 py-4">Run Date</th>
+                    <th className="text-white/50 text-[11px] font-bold uppercase tracking-wider px-6 py-4">Type</th>
+                    <th className="text-white/50 text-[11px] font-bold uppercase tracking-wider px-6 py-4">Station</th>
+                    <th className="text-white/50 text-[11px] font-bold uppercase tracking-wider px-6 py-4">Target Month</th>
+                    <th className="text-white/50 text-[11px] font-bold uppercase tracking-wider px-6 py-4 text-center">Mode</th>
+                    <th className="text-white/50 text-[11px] font-bold uppercase tracking-wider px-6 py-4 text-right">Nino3.4</th>
+                    <th className="text-white/50 text-[11px] font-bold uppercase tracking-wider px-6 py-4 text-right">Water Level</th>
+                    <th className="text-white/50 text-[11px] font-bold uppercase tracking-wider px-6 py-4 text-center">Risk</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody className="divide-y divide-white/5">
                   {filteredRows.slice(0, 300).map((row, idx) => (
-                    <tr key={`${row.recordId}-${idx}`} className="border-b border-white/5 hover:bg-white/5">
-                      <td className="text-white p-3 text-sm whitespace-nowrap">{formatDateTime(row.runDate)}</td>
-                      <td className="text-white p-3 text-sm">{TYPE_LABELS[row.type]}</td>
-                      <td className="text-white p-3">{row.station_id ?? row.stationId ?? '—'}</td>
-                      <td className="text-white p-3">{row.month}</td>
-                      <td className="text-white p-3">
-                        <Badge variant="default">{row.mode}</Badge>
+                    <tr key={`${row.recordId}-${idx}`} className="hover:bg-white/5 transition-colors group">
+                      <td className="px-6 py-4 text-sm text-white/80 whitespace-nowrap">{formatDateTime(row.runDate)}</td>
+                      <td className="px-6 py-4 text-sm text-white font-medium">{TYPE_LABELS[row.type]}</td>
+                      <td className="px-6 py-4 text-sm text-white/80">{row.station_id ?? row.stationId ?? '—'}</td>
+                      <td className="px-6 py-4 text-sm text-white/80 whitespace-nowrap">
+                        {row.month ? new Date(row.month + '-01').toLocaleString('en-US', { month: 'short', year: 'numeric' }) : '—'}
                       </td>
-                      <td className="text-white p-3">{row.nino34 !== undefined ? row.nino34.toFixed(2) : '—'}</td>
-                      <td className="text-white p-3">
-                        {row.predicted_water_level_m !== undefined ? row.predicted_water_level_m.toFixed(2) : '—'}
+                      <td className="px-6 py-4 text-center">
+                        <Badge variant="default" className="bg-white/10 hover:bg-white/20 text-white/70 border-0">{row.mode}</Badge>
                       </td>
-                      <td className="p-3">
+                      <td className="px-6 py-4 text-sm text-white/80 text-right font-mono">{row.nino34 !== undefined ? row.nino34.toFixed(2) : '—'}</td>
+                      <td className="px-6 py-4 text-sm text-white font-bold text-right font-mono">
+                        {row.predicted_water_level_m !== undefined ? `${row.predicted_water_level_m.toFixed(2)}m` : '—'}
+                      </td>
+                      <td className="px-6 py-4 text-center">
                         {row.risk_label ? <Badge variant={row.risk_label}>{row.risk_label}</Badge> : '—'}
                       </td>
                     </tr>
@@ -270,14 +327,16 @@ const ForecastHistory = () => {
                 </tbody>
               </table>
               {filteredRows.length > 300 && (
-                <p className="text-white/50 text-xs text-center mt-3">
-                  Showing the first 300 of {filteredRows.length} matching rows. Export to CSV to see all of them.
-                </p>
+                <div className="p-4 border-t border-white/5 bg-white/[0.01]">
+                  <p className="text-accent text-xs text-center">
+                    Showing the first 300 of {filteredRows.length} matching rows. Export to CSV to see all data.
+                  </p>
+                </div>
               )}
             </div>
           )}
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </motion.div>
   );
 };

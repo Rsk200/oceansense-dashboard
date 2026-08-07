@@ -35,6 +35,7 @@ const readRecords = (): ForecastHistoryRecord[] => {
 
 const writeRecords = (records: ForecastHistoryRecord[]): void => {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(records.slice(0, MAX_RECORDS)));
+  window.dispatchEvent(new Event('forecast_history_updated'));
 };
 
 export const getForecastHistory = (): ForecastHistoryRecord[] => readRecords();
@@ -80,4 +81,5 @@ export const saveWaterLevelForecast = (
 
 export const clearForecastHistory = (): void => {
   localStorage.removeItem(STORAGE_KEY);
+  window.dispatchEvent(new Event('forecast_history_updated'));
 };

@@ -37,11 +37,18 @@ const WaterLevel = () => {
 
   const getChartForStation = (stationId: StationId) => {
     const stationData = stationForecasts.filter((f) => f.station_id === stationId);
-    return stationData.map((f) => ({
-      month: f.month,
-      'Water Level': f.predicted_water_level_m,
-      Threshold: f.flood_threshold_m,
-    }));
+    return stationData.map((f) => {
+      // Format month from '2026-01' to 'Jan 2026'
+      const dateStr = new Date(f.month + '-01').toLocaleString('en-US', { month: 'short', year: 'numeric' });
+      return {
+        month: dateStr,
+        'Water Level': f.predicted_water_level_m,
+        Threshold: f.flood_threshold_m,
+        ConfidenceMin: f.lower_m,
+        ConfidenceMax: f.upper_m,
+        ConfidenceRange: [f.lower_m, f.upper_m],
+      };
+    });
   };
 
   const handleScenarioRun = () => {
@@ -87,6 +94,13 @@ const WaterLevel = () => {
     toast.success('CSV downloaded successfully');
   };
 
+  const handleRefresh = async () => {
+    if (mode === 'auto') {
+      await autoQuery.refetch();
+      toast.success('Water level forecast refreshed');
+    }
+  };
+
   const stationIds =
     selectedStation === 'all' ? (Object.keys(STATIONS) as StationId[]) : [selectedStation];
 
@@ -104,7 +118,7 @@ const WaterLevel = () => {
         </div>
         <div className="flex items-center space-x-2">
           {mode === 'auto' && (
-            <Button variant="ghost" size="sm" onClick={() => autoQuery.refetch()} disabled={isLoading}>
+            <Button variant="ghost" size="sm" onClick={handleRefresh} disabled={isLoading}>
               <Droplets className={`w-4 h-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
               Refresh
             </Button>
@@ -195,38 +209,46 @@ const WaterLevel = () => {
         </Card>
       ) : (
         <>
-          {stationIds.map((stationId) => {
-            const stationData = stationForecasts.filter((f) => f.station_id === stationId);
-            const peakRisk = stationData.reduce<RiskLabel>(
-              (best, row) =>
-                row.risk_label === 'RED' || (best !== 'RED' && row.risk_label === 'YELLOW')
-                  ? row.risk_label
-                  : best,
-              'GREEN',
-            );
+          <div className={selectedStation === 'all' ? "grid grid-cols-1 xl:grid-cols-2 gap-6" : "space-y-6"}>
+            {stationIds.map((stationId) => {
+              const stationData = stationForecasts.filter((f) => f.station_id === stationId);
+              const peakRisk = stationData.reduce<RiskLabel>(
+                (best, row) =>
+                  row.risk_label === 'RED' || (best !== 'RED' && row.risk_label === 'YELLOW')
+                    ? row.risk_label
+                    : best,
+                'GREEN',
+              );
 
-            return (
-              <Card key={stationId}>
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <CardTitle>{STATIONS[stationId].name}</CardTitle>
-                    <Badge variant={peakRisk}>{peakRisk}</Badge>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <LineChart
-                    data={getChartForStation(stationId)}
-                    lines={[
-                      { dataKey: 'Water Level', stroke: '#00C2FF', name: 'Predicted' },
-                      { dataKey: 'Threshold', stroke: '#EF4444', name: 'Threshold' },
-                    ]}
-                    xAxisDataKey="month"
-                    height={300}
-                  />
-                </CardContent>
-              </Card>
-            );
-          })}
+              const chartData = getChartForStation(stationId);
+              const threshold = stationData[0]?.flood_threshold_m;
+
+              return (
+                <Card key={stationId}>
+                  <CardHeader>
+                    <div className="flex items-center justify-between">
+                      <CardTitle>{STATIONS[stationId].name}</CardTitle>
+                      <Badge variant={peakRisk}>{peakRisk}</Badge>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <LineChart
+                      data={chartData}
+                      lines={[
+                        { dataKey: 'Water Level', stroke: '#00C2FF', name: 'Predicted (m)' },
+                        { dataKey: 'Threshold', stroke: '#EF4444', name: 'Danger Level (m)' },
+                      ]}
+                      referenceAreas={threshold ? [
+                        { y1: threshold, y2: threshold + 2, fill: '#EF4444', fillOpacity: 0.1 }
+                      ] : undefined}
+                      xAxisDataKey="month"
+                      height={300}
+                    />
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
 
           <Card>
             <CardHeader>
@@ -259,31 +281,55 @@ const WaterLevel = () => {
                         ? 'text-warning'
                         : 'text-success';
 
+                  const percentage = Math.min(100, Math.max(0, (highestRisk.predicted_water_level_m / highestRisk.flood_threshold_m) * 100));
+
                   return (
                     <motion.div
                       key={stationId}
                       initial={{ opacity: 0, scale: 0.9 }}
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ duration: 0.3 }}
-                      className="glass rounded-lg p-4"
+                      className="glass rounded-lg p-5 border border-white/5 relative overflow-hidden"
                     >
-                      <div className="flex items-center justify-between mb-3">
-                        <h3 className="text-lg font-semibold text-white">{config.name}</h3>
+                      <div className={`absolute -right-6 -top-6 w-24 h-24 rounded-full blur-[30px] opacity-20 ${highestRisk.risk_label === 'RED' ? 'bg-danger' : highestRisk.risk_label === 'YELLOW' ? 'bg-warning' : 'bg-success'}`} />
+                      
+                      <div className="flex items-center justify-between mb-4 relative z-10">
+                        <div className="flex items-center gap-2">
+                          <div className={`p-2 rounded-lg bg-white/5 border border-white/10 ${riskColor}`}>
+                            <RiskIcon className="w-4 h-4" />
+                          </div>
+                          <h3 className="text-base font-bold text-white">{config.name}</h3>
+                        </div>
                         <Badge variant={highestRisk.risk_label}>{highestRisk.risk_label}</Badge>
                       </div>
-                      <div className="space-y-2 text-sm">
-                        <div className="flex items-center space-x-2">
-                          <RiskIcon className={`w-4 h-4 ${riskColor}`} />
-                          <span className="text-white/60">Peak month:</span>
-                          <span className="text-white">{highestRisk.month}</span>
+
+                      <div className="space-y-3 text-sm relative z-10">
+                        <div className="flex justify-between items-end border-b border-white/5 pb-2">
+                          <div>
+                            <span className="text-[10px] uppercase font-mono tracking-wider text-white/50 block mb-1">Peak Month</span>
+                            <span className="text-white font-medium">{new Date(highestRisk.month + '-01').toLocaleString('en-US', { month: 'short', year: 'numeric' })}</span>
+                          </div>
+                          <div className="text-right">
+                            <span className="text-[10px] uppercase font-mono tracking-wider text-white/50 block mb-1">Predicted Peak</span>
+                            <span className="text-white font-bold text-lg">{highestRisk.predicted_water_level_m.toFixed(2)}<span className="text-xs text-white/50 font-normal">m</span></span>
+                          </div>
                         </div>
-                        <div className="flex justify-between">
-                          <span className="text-white/60">Level:</span>
-                          <span className="text-white">{highestRisk.predicted_water_level_m.toFixed(2)}m</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-white/60">Threshold:</span>
-                          <span className="text-white">{highestRisk.flood_threshold_m.toFixed(2)}m</span>
+
+                        <div className="mt-4">
+                          <div className="flex justify-between text-xs mb-1.5 font-mono">
+                            <span className="text-white/50">Capacity vs Danger ({highestRisk.flood_threshold_m.toFixed(2)}m)</span>
+                            <span className={percentage >= 100 ? 'text-danger font-bold' : percentage > 85 ? 'text-warning' : 'text-success'}>
+                              {percentage.toFixed(1)}%
+                            </span>
+                          </div>
+                          <div className="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
+                            <motion.div 
+                              initial={{ width: 0 }}
+                              animate={{ width: `${percentage}%` }}
+                              transition={{ duration: 1, ease: 'easeOut' }}
+                              className={`h-full rounded-full ${percentage >= 100 ? 'bg-danger shadow-[0_0_10px_rgba(239,68,68,0.5)]' : percentage > 85 ? 'bg-warning' : 'bg-success'}`} 
+                            />
+                          </div>
                         </div>
                       </div>
                     </motion.div>

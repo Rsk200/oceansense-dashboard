@@ -449,7 +449,7 @@ const BangladeshMap = () => {
   return (
     <motion.section
       id="map"
-      className="section-rule py-14 relative overflow-hidden"
+      className="section-rule py-16 lg:py-20 relative overflow-hidden"
       initial="hidden"
       whileInView="show"
       viewport={{ once: true, margin: '-100px' }}
@@ -465,13 +465,16 @@ const BangladeshMap = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
         {/* Header */}
-        <motion.div variants={itemVariants} className="text-center mb-10">
-          <div className="flex items-center justify-center gap-4 mb-3">
-            <div className="h-px w-16 bg-gradient-to-r from-transparent to-cyan-400/60" />
-            <h2 className="text-2xl font-black text-white">Interactive Bangladesh Map</h2>
-            <div className="h-px w-16 bg-gradient-to-l from-transparent to-cyan-400/60" />
-          </div>
-          <p className="text-white/55 text-sm">Real-time monitoring stations across Bangladesh</p>
+        <motion.div variants={itemVariants} className="mb-10">
+          <p className="mb-2 font-mono text-[11px] font-medium uppercase tracking-[0.2em] text-[#00C2FF]/70">
+            Signature element · Live data
+          </p>
+          <h2 className="font-display text-3xl font-bold text-white lg:text-4xl">
+            Bangladesh Flood Risk Map
+          </h2>
+          <p className="mt-2 text-[15px] text-white/50">
+            Three stations, live water levels, updating every 8 seconds. Risk colors — green, yellow, red — mean exactly what you think.
+          </p>
         </motion.div>
 
         {/* Main panel */}

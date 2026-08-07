@@ -1,100 +1,173 @@
+/**
+ * AIPipeline — redesigned with a strong visual connector line,
+ * numbered steps, and user-facing copy (no engineering jargon).
+ */
 import { motion, useReducedMotion, type Variants } from 'framer-motion';
-import { AlertTriangle, BrainCircuit, DatabaseZap, Globe, Sprout, Users, Waves } from 'lucide-react';
+import { AlertTriangle, BrainCircuit, Globe2, Leaf, MessageSquareWarning, Waves } from 'lucide-react';
 
-const pipelineSteps = [
-  { icon: Globe, title: 'Global Climate Data', description: 'Historical ENSO indices and climate patterns.', color: '#38bdf8' },
-  { icon: Sprout, title: 'Local Climate Factors', description: 'Rainfall, soil moisture, and station variables.', color: '#22c55e' },
-  { icon: AlertTriangle, title: 'Flood Risk Analysis', description: 'Risk classification and threshold analysis.', color: '#f59e0b' },
-  { icon: BrainCircuit, title: 'ENSO Prediction', description: 'Machine learning-based ENSO forecasting.', color: '#d946ef' },
-  { icon: Waves, title: 'Water Level Forecast', description: 'Hybrid XGBoost and LSTM model predictions.', color: '#06b6d4' },
-  { icon: Users, title: 'Community Advisory', description: 'Actionable guidance for officials and communities.', color: '#facc15' },
+const steps = [
+  {
+    num: '01',
+    icon: Globe2,
+    title: 'Pacific Ocean Data',
+    body: 'Niño 3.4 and ONI indices captured from global climate archives — the same signals NOAA uses to declare El Niño events.',
+    color: '#38bdf8',
+  },
+  {
+    num: '02',
+    icon: Leaf,
+    title: 'Local Environment',
+    body: 'Monsoon rainfall, soil moisture, and river discharge observations from stations across the Brahmaputra basin.',
+    color: '#22c55e',
+  },
+  {
+    num: '03',
+    icon: BrainCircuit,
+    title: 'ENSO Forecast',
+    body: 'A machine learning model predicts future ENSO conditions — months before they influence Bangladesh rainfall.',
+    color: '#a78bfa',
+  },
+  {
+    num: '04',
+    icon: Waves,
+    title: 'Water Level Forecast',
+    body: 'An XGBoost + LSTM hybrid translates ENSO signals into station-level water level predictions with confidence bands.',
+    color: '#06b6d4',
+  },
+  {
+    num: '05',
+    icon: AlertTriangle,
+    title: 'Risk Classification',
+    body: `Each station's predicted level is compared against validated flood thresholds — assigned Low, Moderate, or High risk.`,
+    color: '#E8B208',
+  },
+  {
+    num: '06',
+    icon: MessageSquareWarning,
+    title: 'Community Advisory',
+    body: 'Plain-language guidance reaches officials and communities in time to mobilize resources before waters rise.',
+    color: '#f97316',
+  },
 ];
 
 const AIPipeline = () => {
   const prefersReducedMotion = useReducedMotion();
-  const sectionVariants: Variants = {
-    hidden: prefersReducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 },
-    show: { opacity: 1, y: 0 },
-  };
-  const gridVariants: Variants = {
+  const containerVariants: Variants = {
     hidden: {},
-    show: { transition: { staggerChildren: prefersReducedMotion ? 0 : 0.09 } },
+    show: { transition: { staggerChildren: prefersReducedMotion ? 0 : 0.08 } },
   };
   const itemVariants: Variants = {
-    hidden: prefersReducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 },
-    show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: 'easeOut' } },
+    hidden: prefersReducedMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 },
+    show: { opacity: 1, y: 0, transition: { duration: 0.55, ease: 'easeOut' } },
   };
 
   return (
-    <motion.section
-      id="pipeline"
-      className="section-rule relative overflow-hidden py-14"
-      initial="hidden"
-      whileInView="show"
-      viewport={{ once: true, margin: '-100px' }}
-      variants={sectionVariants}
-      transition={{ duration: 0.6, ease: 'easeOut' }}
-    >
-      <div className="absolute inset-0 ocean-grid opacity-40" />
+    <section id="pipeline" className="section-rule relative overflow-hidden py-16 lg:py-20">
+      <div className="absolute inset-0 ocean-grid opacity-30" />
+
       <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        {/* Header */}
         <motion.div
-          variants={itemVariants}
-          className="mb-9 text-center"
+          initial={prefersReducedMotion ? {} : { opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-80px' }}
+          transition={{ duration: 0.55, ease: 'easeOut' }}
+          className="mb-12 max-w-xl"
         >
-          <div className="mb-2 flex items-center justify-center gap-4">
-            <span className="h-px w-14 bg-gradient-to-r from-transparent to-accent/70" />
-            <h2 className="text-2xl font-black text-white">AI Pipeline</h2>
-            <span className="h-px w-14 bg-gradient-to-l from-transparent to-accent/70" />
-          </div>
-          <p className="text-sm text-white/55">From global climate data to community action</p>
+          <p className="mb-2 font-mono text-[11px] font-medium uppercase tracking-[0.2em] text-[#00C2FF]/70">
+            How it works
+          </p>
+          <h2 className="font-display text-3xl font-bold text-white lg:text-4xl">
+            From Pacific signal to community action
+          </h2>
+          <p className="mt-3 text-[15px] leading-7 text-white/50">
+            Six steps — climate data in, actionable flood warnings out. Each step you see on screen corresponds directly to a decision a disaster-response official can act on.
+          </p>
         </motion.div>
 
-        <div className="relative">
-          <div className="absolute left-[8%] right-[8%] top-[46px] hidden h-px bg-gradient-to-r from-cyan-400/30 via-emerald-300/30 to-amber-300/30 xl:block" />
+        {/* Pipeline steps */}
+        <motion.div
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: '-60px' }}
+          variants={containerVariants}
+          className="relative"
+        >
+          {/* Desktop connector line */}
+          <div
+            className="absolute left-[calc(8.333%+28px)] right-[calc(8.333%+28px)] top-[44px] hidden h-px xl:block"
+            style={{
+              background:
+                'linear-gradient(90deg, #38bdf830, #22c55e30, #a78bfa30, #06b6d430, #E8B20830, #f9731630)',
+            }}
+            aria-hidden
+          >
+            {/* Arrow heads along line */}
+            {[1, 2, 3, 4, 5].map((i) => (
+              <div
+                key={i}
+                className="absolute top-1/2 -translate-y-1/2"
+                style={{ left: `${i * (100 / 5)}%` }}
+              >
+                <svg width="10" height="8" viewBox="0 0 10 8" fill="none" aria-hidden>
+                  <path d="M0 4h8M5 1l3 3-3 3" stroke="rgba(255,255,255,0.18)" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </div>
+            ))}
+          </div>
 
-          <motion.div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6" variants={gridVariants}>
-            {pipelineSteps.map((step, index) => {
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+            {steps.map((step) => {
               const Icon = step.icon;
               return (
-                <motion.div
-                  key={step.title}
-                  variants={itemVariants}
-                  className="relative"
-                >
-                  <div className="panel-glow group relative h-full min-h-[168px] overflow-hidden rounded-lg border border-white/10 bg-white/[0.06] p-4 transition-all duration-200 ease-out hover:-translate-y-1 hover:border-sky-400/55 hover:bg-white/[0.095] hover:shadow-[0_20px_70px_rgba(56,189,248,0.16)]"
-                    style={{ boxShadow: `inset 0 1px 0 rgba(255,255,255,0.08), 0 0 0 rgba(0,0,0,0)` }}
+                <motion.div key={step.num} variants={itemVariants} className="relative xl:flex xl:flex-col xl:items-center">
+                  {/* Step card */}
+                  <div
+                    className="group relative h-full overflow-hidden rounded-xl border border-white/[0.08] bg-[#041C3E]/70 p-4 transition-all duration-200 hover:border-[#0072A2]/50 hover:shadow-[0_12px_48px_rgba(0,114,162,0.18)]"
                   >
+                    {/* Color top line */}
                     <div
-                      className="absolute inset-x-0 top-0 h-0.5 opacity-80"
-                      style={{ background: `linear-gradient(90deg, transparent, ${step.color}, transparent)` }}
+                      className="absolute inset-x-0 top-0 h-0.5"
+                      style={{ background: `linear-gradient(90deg, transparent, ${step.color}80, transparent)` }}
                     />
-                    <div
-                      className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg transition-transform duration-200 ease-out group-hover:scale-[1.04] group-hover:shadow-[0_0_34px_rgba(56,189,248,0.32)]"
-                      style={{ background: `${step.color}22`, boxShadow: `0 0 26px ${step.color}22` }}
-                    >
-                      <Icon className="h-6 w-6 transition-transform duration-200 ease-out group-hover:scale-[1.08]" style={{ color: step.color }} />
+                    {/* Number + Icon row */}
+                    <div className="mb-4 flex items-center gap-3">
+                      <div
+                        className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg"
+                        style={{ background: `${step.color}18` }}
+                      >
+                        <Icon className="h-5 w-5" style={{ color: step.color }} />
+                      </div>
+                      <span className="font-mono text-xl font-semibold tabular-nums text-white/12">
+                        {step.num}
+                      </span>
                     </div>
-                    <div className="mb-2 text-[10px] font-black text-white/30">0{index + 1}</div>
-                    <h3 className="mb-2 text-sm font-black text-white">{step.title}</h3>
-                    <p className="text-xs leading-5 text-white/55">{step.description}</p>
+                    <h3 className="mb-2 font-display text-[14px] font-semibold text-white">
+                      {step.title}
+                    </h3>
+                    <p className="text-xs leading-5 text-white/48">{step.body}</p>
                   </div>
+
+                  {/* Mobile vertical connector (between cards on small screens) */}
+                  <div className="mx-auto h-4 w-px bg-white/10 xl:hidden" aria-hidden />
                 </motion.div>
               );
             })}
-          </motion.div>
-        </div>
-
-        <motion.div
-          variants={itemVariants}
-          className="mx-auto mt-8 flex max-w-3xl flex-col items-center justify-center gap-3 rounded-lg border border-white/10 bg-white/[0.045] px-5 py-4 text-center sm:flex-row sm:text-left"
-        >
-          <DatabaseZap className="h-6 w-6 shrink-0 text-accent" />
-          <p className="text-sm leading-6 text-white/62">
-            The pipeline connects climate ingestion, model inference, station risk analysis, and advisory output without changing the dashboard data contracts.
-          </p>
+          </div>
         </motion.div>
+
+        {/* User-facing note — no engineering jargon */}
+        <motion.p
+          initial={prefersReducedMotion ? {} : { opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="mt-10 text-center font-mono text-xs text-white/28 tabular-nums"
+        >
+          Data refreshes every 8 s · Forecasts generated on demand · Risk thresholds validated against 2000–2024 historical floods
+        </motion.p>
       </div>
-    </motion.section>
+    </section>
   );
 };
 

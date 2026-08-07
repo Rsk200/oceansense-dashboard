@@ -1,18 +1,37 @@
-import { LineChart as RechartsLineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import { ComposedChart, Line, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend, ReferenceLine, ReferenceArea } from 'recharts';
 import { motion } from 'framer-motion';
 
 interface LineChartProps {
   data: any[];
-  lines: Array<{
+  lines?: Array<{
     dataKey: string;
     stroke: string;
     name: string;
+  }>;
+  areas?: Array<{
+    dataKey: string | [string, string];
+    fill: string;
+    stroke?: string;
+    name: string;
+    fillOpacity?: number;
+  }>;
+  referenceLines?: Array<{
+    y: number;
+    stroke: string;
+    label?: string;
+    strokeDasharray?: string;
+  }>;
+  referenceAreas?: Array<{
+    y1?: number;
+    y2?: number;
+    fill: string;
+    fillOpacity?: number;
   }>;
   xAxisDataKey: string;
   height?: number;
 }
 
-const LineChart = ({ data, lines, xAxisDataKey, height = 300 }: LineChartProps) => {
+const LineChart = ({ data, lines = [], areas = [], referenceLines, referenceAreas, xAxisDataKey, height = 300 }: LineChartProps) => {
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
@@ -20,7 +39,7 @@ const LineChart = ({ data, lines, xAxisDataKey, height = 300 }: LineChartProps) 
       transition={{ duration: 0.3 }}
     >
       <ResponsiveContainer width="100%" height={height}>
-        <RechartsLineChart data={data}>
+        <ComposedChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
           <XAxis 
             dataKey={xAxisDataKey} 
@@ -42,6 +61,36 @@ const LineChart = ({ data, lines, xAxisDataKey, height = 300 }: LineChartProps) 
           <Legend 
             wrapperStyle={{ color: '#ffffff' }}
           />
+          {referenceAreas?.map((refArea, idx) => (
+            <ReferenceArea
+              key={`ra-${idx}`}
+              y1={refArea.y1}
+              y2={refArea.y2}
+              fill={refArea.fill}
+              fillOpacity={refArea.fillOpacity ?? 0.1}
+            />
+          ))}
+          {referenceLines?.map((refLine, idx) => (
+            <ReferenceLine 
+              key={`rl-${idx}`}
+              y={refLine.y}
+              stroke={refLine.stroke}
+              label={{ position: 'insideTopLeft', value: refLine.label, fill: refLine.stroke, fontSize: 10 }}
+              strokeDasharray={refLine.strokeDasharray || "3 3"}
+            />
+          ))}
+          {areas.map((area) => (
+            <Area
+              key={typeof area.dataKey === 'string' ? area.dataKey : area.dataKey.join('-')}
+              type="monotone"
+              dataKey={area.dataKey as any}
+              fill={area.fill}
+              stroke={area.stroke || "none"}
+              name={area.name}
+              fillOpacity={area.fillOpacity ?? 0.2}
+              isAnimationActive={true}
+            />
+          ))}
           {lines.map((line) => (
             <Line
               key={line.dataKey}
@@ -54,7 +103,7 @@ const LineChart = ({ data, lines, xAxisDataKey, height = 300 }: LineChartProps) 
               activeDot={{ r: 6 }}
             />
           ))}
-        </RechartsLineChart>
+        </ComposedChart>
       </ResponsiveContainer>
     </motion.div>
   );
