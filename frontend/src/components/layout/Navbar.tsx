@@ -72,9 +72,32 @@ const Navbar = () => {
         const top = el.getBoundingClientRect().top + window.scrollY - navOffset;
         window.history.pushState(null, '', `/#${hash}`);
         window.scrollTo({ top, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
+        setMobileMenuOpen(false);
       }
+    } else {
+      // If we are NOT on the homepage (e.g. /about), let the Link navigate natively.
+      // We also close the mobile menu.
+      setMobileMenuOpen(false);
     }
   };
+
+  // Automatically scroll to the hash when navigating from another page (e.g., /about -> /#research)
+  useEffect(() => {
+    if (location.pathname === '/' && location.hash) {
+      const hash = location.hash.replace('#', '');
+      const el = document.getElementById(hash);
+      
+      if (el) {
+        // Small timeout ensures the page has rendered the sections before calculating offset
+        setTimeout(() => {
+          const navOffset = window.scrollY > 80 ? 64 : 72;
+          const top = el.getBoundingClientRect().top + window.scrollY - navOffset;
+          const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          window.scrollTo({ top, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
+        }, 150);
+      }
+    }
+  }, [location.pathname, location.hash]);
 
   return (
     <>
