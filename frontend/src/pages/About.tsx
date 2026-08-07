@@ -313,7 +313,7 @@ const MemberCard = ({ person, index }: { person: Person; index: number }) => {
 
           {/* Name + title + social */}
           <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 mb-1 flex-wrap">
+            <div className="flex items-center gap-2 mb-1.5 flex-wrap">
               <h3 className="text-[18px] font-bold text-white tracking-tight leading-none">
                 {person.name}
               </h3>
@@ -336,7 +336,11 @@ const MemberCard = ({ person, index }: { person: Person; index: number }) => {
                 </a>
               )}
             </div>
-            <p className="text-slate-500 text-[12px]">{person.title}</p>
+            
+            <p className="text-cyan-400 text-[9px] font-bold uppercase tracking-[0.15em] mb-1.5 font-mono bg-cyan-500/10 border border-cyan-500/20 inline-block px-2 py-0.5 rounded-md">
+              {person.role}
+            </p>
+            <p className="text-slate-500 text-[11px]">{person.title}</p>
           </div>
         </div>
 
