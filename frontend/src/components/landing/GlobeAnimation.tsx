@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useMemo, useCallback } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
 import Globe from 'react-globe.gl';
 import { ZoomIn, ZoomOut, Navigation, Info, Waves, ThermometerSun, Snowflake } from 'lucide-react';
 
@@ -14,7 +14,7 @@ const GlobeAnimation = () => {
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
   const [mode, setMode] = useState<ClimateMode>('elnino');
   const [isInteracting, setIsInteracting] = useState(false);
-  const interactionTimeout = useRef<NodeJS.Timeout | null>(null);
+  const interactionTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Handle Resize
   useEffect(() => {
