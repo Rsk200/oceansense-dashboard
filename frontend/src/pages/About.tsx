@@ -25,6 +25,7 @@ interface Person {
   photo: string;
   linkedin: string;
   email?: string;
+  objectPosition?: string;
 }
 
 /* ─── Data ───────────────────────────────────────────────── */
@@ -49,6 +50,7 @@ const MEMBERS: Person[] = [
     skills: ['Python', 'FastAPI', 'OOP', 'REST APIs'],
     photo: '/team/member1.jpeg',
     linkedin: 'https://www.linkedin.com/in/rakibul-hasan20/',
+    objectPosition: '50% 15%',
   },
   {
     name: 'Rabbi Sadnan Khan',
@@ -59,6 +61,7 @@ const MEMBERS: Person[] = [
     skills: ['React', 'TypeScript', 'FastAPI', 'Framer Motion'],
     photo: '/team/member2.jpg',
     linkedin: 'https://www.linkedin.com/in/rabbisadnan26/',
+    objectPosition: '50% 12%',
   },
   {
     name: 'Faria Islam Sara',
@@ -69,6 +72,7 @@ const MEMBERS: Person[] = [
     skills: ['Python', 'Machine Learning', 'Django', 'MongoDB'],
     photo: '/team/member3.jpeg',
     linkedin: 'https://www.linkedin.com/in/faria-islam-sara-73ab0b409/',
+    objectPosition: '50% 20%',
   },
   {
     name: 'Maruf Hossain',
@@ -79,6 +83,7 @@ const MEMBERS: Person[] = [
     skills: ['Python', 'XGBoost', 'LSTM', 'Data Science'],
     photo: '/team/member4.jpg',
     linkedin: 'https://www.linkedin.com/in/maruf-hossain-9055b12a1/',
+    objectPosition: '50% 10%',
   },
 ];
 
@@ -203,8 +208,8 @@ const SupervisorCard = () => {
                 <img
                   src={SUPERVISOR.photo}
                   alt={SUPERVISOR.name}
-                  className="w-full h-full object-cover object-center"
-                  style={{ filter: 'brightness(1.05) contrast(1.05)' }}
+                  className="w-full h-full object-cover"
+                  style={{ objectPosition: '50% 20%', filter: 'brightness(1.05) contrast(1.05)' }}
                 />
               </div>
             </div>
@@ -299,8 +304,11 @@ const MemberCard = ({ person, index }: { person: Person; index: number }) => {
               <img
                 src={person.photo}
                 alt={person.name}
-                className="w-full h-full object-cover object-center"
-                style={{ filter: 'brightness(1.08) contrast(1.05) saturate(1.05)' }}
+                className="w-full h-full object-cover"
+                style={{
+                  objectPosition: person.objectPosition ?? '50% 15%',
+                  filter: 'brightness(1.1) contrast(1.05) saturate(1.05)'
+                }}
               />
             </div>
           </div>
