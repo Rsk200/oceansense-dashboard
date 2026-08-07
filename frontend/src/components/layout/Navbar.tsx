@@ -188,26 +188,43 @@ const Navbar = () => {
             className={`md:hidden fixed left-0 right-0 glass-dark border-b border-white/10 z-40 ${isScrolled ? 'top-14' : 'top-16'}`}
           >
             <div className="px-4 py-4 space-y-1">
-              {navLinks.map((link) => (
-                <a
-                  key={`${link.to}-${link.label}`}
-                  href={link.to}
-                  onClick={(e) => {
-                    handleHashLink(e, link.hash);
-                    setMobileMenuOpen(false);
-                  }}
-                  className="flex items-center px-4 py-3 rounded-lg text-white/70 hover:bg-white/10 hover:text-white text-sm font-medium transition-colors"
-                >
-                  {link.label}
-                </a>
-              ))}
+              {navLinks.map((link) => {
+                const cls = "flex items-center px-4 py-3 rounded-lg text-white/70 hover:bg-white/10 hover:text-white text-sm font-medium transition-colors";
+                
+                if (!link.hash) {
+                  return (
+                    <Link
+                      key={`${link.to}-${link.label}`}
+                      to={link.to}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className={cls}
+                    >
+                      {link.label}
+                    </Link>
+                  );
+                }
+
+                return (
+                  <a
+                    key={`${link.to}-${link.label}`}
+                    href={link.to}
+                    onClick={(e) => {
+                      handleHashLink(e, link.hash);
+                    }}
+                    className={cls}
+                  >
+                    {link.label}
+                  </a>
+                );
+              })}
               {!isDashboard && (
                 <Link
                   to="/dashboard/overview"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="block w-full bg-gradient-to-r from-accent to-cyan-300 text-primary px-4 py-3 rounded-lg font-semibold text-center text-sm mt-2"
+                  className="flex items-center justify-center gap-2 mt-4 mx-2 rounded-md border border-accent/45 bg-accent/10 px-4 py-3 text-sm font-bold text-white shadow-[0_0_22px_rgba(0,194,255,0.18)] transition-all duration-200 hover:bg-accent hover:text-primary"
                 >
-                  Launch Dashboard -&gt;
+                  <span>Launch Dashboard</span>
+                  <ArrowRight className="w-4 h-4" />
                 </Link>
               )}
             </div>
