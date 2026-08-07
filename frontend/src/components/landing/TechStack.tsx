@@ -3,18 +3,20 @@
  * Brand colors preserved per spec.
  */
 import { motion, useReducedMotion, type Variants } from 'framer-motion';
+import { SiFastapi, SiReact, SiTypescript, SiPytorch, SiSqlalchemy, SiLeaflet, SiRedis, SiTailwindcss } from 'react-icons/si';
+import { Network, Brain } from 'lucide-react';
 
 const technologies = [
-  { name: 'FastAPI', category: 'Backend', color: '#14b8a6', initial: 'FA' },
-  { name: 'React', category: 'Frontend', color: '#38bdf8', initial: 'Re' },
-  { name: 'TypeScript', category: 'Language', color: '#60a5fa', initial: 'TS' },
-  { name: 'XGBoost', category: 'ML Model', color: '#06b6d4', initial: 'XG' },
-  { name: 'PyTorch', category: 'Deep Learning', color: '#f97316', initial: 'PT' },
-  { name: 'SQLAlchemy', category: 'Database', color: '#f87171', initial: 'SA' },
-  { name: 'Leaflet', category: 'Maps', color: '#84cc16', initial: 'LF' },
-  { name: 'Redis', category: 'Caching', color: '#ef4444', initial: 'RS' },
-  { name: 'Tailwind', category: 'Styling', color: '#22d3ee', initial: 'TW' },
-  { name: 'LSTM', category: 'Forecasting', color: '#a78bfa', initial: 'LS' },
+  { name: 'FastAPI', category: 'Backend', color: '#009688', icon: SiFastapi },
+  { name: 'React', category: 'Frontend', color: '#61DAFB', icon: SiReact },
+  { name: 'TypeScript', category: 'Language', color: '#3178C6', icon: SiTypescript },
+  { name: 'XGBoost', category: 'ML Model', color: '#06b6d4', icon: Network },
+  { name: 'PyTorch', category: 'Deep Learning', color: '#EE4C2C', icon: SiPytorch },
+  { name: 'SQLAlchemy', category: 'Database', color: '#D71F00', icon: SiSqlalchemy },
+  { name: 'Leaflet', category: 'Maps', color: '#199900', icon: SiLeaflet },
+  { name: 'Redis', category: 'Caching', color: '#DC382D', icon: SiRedis },
+  { name: 'Tailwind', category: 'Styling', color: '#06B6D4', icon: SiTailwindcss },
+  { name: 'LSTM', category: 'Forecasting', color: '#a78bfa', icon: Brain },
 ];
 
 const TechStack = () => {
@@ -62,19 +64,21 @@ const TechStack = () => {
             <motion.div
               key={tech.name}
               variants={itemVariants}
-              className="group flex flex-col items-center gap-2 rounded-xl border border-white/[0.07] bg-[#041C3E]/50 p-3 text-center transition-all duration-200 hover:border-[#0072A2]/40 hover:bg-[#041C3E]/80 focus-within:border-[#00C2FF]/50"
+              className="group flex flex-col items-center gap-2.5 rounded-xl border border-white/[0.07] bg-[#041C3E]/50 p-3 text-center transition-all duration-300 hover:-translate-y-1 hover:border-[#0072A2]/40 hover:bg-[#041C3E]/80 hover:shadow-lg focus-within:border-[#00C2FF]/50"
               tabIndex={0}
             >
-              {/* Monogram badge in brand color */}
+              {/* Logo badge in brand color */}
               <div
-                className="flex h-9 w-9 items-center justify-center rounded-lg font-mono text-xs font-bold transition-transform duration-200 group-hover:scale-105"
-                style={{ background: `${tech.color}18`, color: tech.color }}
+                className="flex h-11 w-11 items-center justify-center rounded-xl transition-all duration-300 group-hover:scale-110"
+                style={{ background: `${tech.color}15`, color: tech.color, boxShadow: `0 4px 20px ${tech.color}00` }}
+                onMouseEnter={(e) => (e.currentTarget.style.boxShadow = `0 4px 20px ${tech.color}40`)}
+                onMouseLeave={(e) => (e.currentTarget.style.boxShadow = `0 4px 20px ${tech.color}00`)}
               >
-                {tech.initial}
+                <tech.icon className="h-5 w-5" />
               </div>
               <div>
-                <div className="text-[11px] font-semibold text-white">{tech.name}</div>
-                <div className="mt-0.5 font-mono text-[9px] uppercase tracking-wide text-white/30">
+                <div className="text-[11px] font-bold text-white tracking-wide drop-shadow-sm">{tech.name}</div>
+                <div className="mt-0.5 font-mono text-[9px] uppercase tracking-wider text-white/40 group-hover:text-white/60 transition-colors">
                   {tech.category}
                 </div>
               </div>
