@@ -131,31 +131,32 @@ function StationCard({ s, selected, onSelect }: { s: LiveStation; selected: bool
   return (
     <motion.div
       onClick={onSelect}
-      className="rounded-lg p-3.5 cursor-pointer relative overflow-hidden transition-all duration-200"
+      whileHover={{ scale: 1.02, backgroundColor: selected ? ri.bg : 'rgba(255,255,255,0.08)' }}
+      className="rounded-xl p-4 cursor-pointer relative overflow-hidden transition-all duration-300 backdrop-blur-md"
       style={{
-        background: selected ? ri.bg : 'rgba(255,255,255,0.04)',
-        border: `1px solid ${selected ? ri.color + '66' : 'rgba(255,255,255,0.08)'}`,
-        boxShadow: selected ? `0 0 18px 2px ${ri.glow}` : 'none',
+        background: selected ? ri.bg : 'rgba(255,255,255,0.03)',
+        border: `1px solid ${selected ? ri.color + '80' : 'rgba(255,255,255,0.08)'}`,
+        boxShadow: selected ? `0 0 20px 0px ${ri.glow}` : '0 4px 20px -2px rgba(0,0,0,0.2)',
       }}
     >
       <motion.div
         aria-hidden
-        className="pointer-events-none absolute inset-0 rounded-lg border"
-        style={{ borderColor: ri.color, boxShadow: `0 0 18px ${ri.glow}` }}
-        animate={prefersReducedMotion ? { opacity: selected ? 0.55 : 0.28 } : { opacity: [0.18, selected ? 0.72 : 0.46, 0.18] }}
-        transition={{ duration: ri.pulseSeconds + 1.2, repeat: Infinity, ease: 'easeInOut' }}
+        className="pointer-events-none absolute inset-0 rounded-xl border"
+        style={{ borderColor: ri.color, boxShadow: `inset 0 0 20px ${ri.glow}` }}
+        animate={prefersReducedMotion ? { opacity: selected ? 0.3 : 0.1 } : { opacity: [0.05, selected ? 0.4 : 0.15, 0.05] }}
+        transition={{ duration: ri.pulseSeconds, repeat: Infinity, ease: 'easeInOut' }}
       />
       {/* Top accent line */}
       <div className="absolute top-0 left-0 right-0 h-[2px] rounded-t-lg"
         style={{ background: `linear-gradient(90deg,transparent,${ri.color},transparent)`, opacity: selected ? 1 : 0.5 }} />
 
       {/* Header */}
-      <div className="flex items-start justify-between mb-2.5">
+      <div className="flex items-start justify-between mb-3">
         <div>
-          <span className="text-white text-sm font-bold">{s.label}</span>
-          <span className="text-white/40 text-xs"> - {s.location}</span>
+          <span className="text-white text-[15px] font-bold tracking-wide">{s.label}</span>
+          <span className="text-white/40 text-xs ml-1 font-mono uppercase tracking-widest">{s.location}</span>
         </div>
-        <span className="flex items-center gap-1.5 text-[10px] font-bold px-2 py-0.5 rounded-full border shrink-0 ml-2"
+        <span className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full border shrink-0 ml-2 backdrop-blur-md"
           style={{ background: ri.bg, color: ri.color, borderColor: ri.border }}>
           <motion.span className="w-1.5 h-1.5 rounded-full block" style={{ background: ri.color }}
             animate={{ opacity: [1, 0.2, 1] }} transition={{ duration: ri.pulseSeconds, repeat: Infinity }} />
@@ -259,7 +260,7 @@ function MapCanvas({ stations, selected, onSelect, zoom, onZoom }: {
   const labelOffsets = useMemo(() => computeLabelOffsets(stations), [stations]);
 
   return (
-    <div className="relative w-full h-full" style={{ background: 'rgba(3,10,38,0.97)' }}>
+    <div className="relative w-full h-full rounded-2xl border border-white/5 bg-gradient-to-br from-[#0a1128]/95 to-[#030a18]/95 overflow-hidden shadow-2xl backdrop-blur-xl">
 
       {/* Grid */}
       <svg className="absolute inset-0 w-full h-full pointer-events-none" aria-hidden>
@@ -275,8 +276,8 @@ function MapCanvas({ stations, selected, onSelect, zoom, onZoom }: {
       <svg viewBox={`0 0 ${VW} ${VH}`} className="w-full h-full" style={{ overflow: 'visible' }}>
         <defs>
           <radialGradient id="bdGrad" cx="50%" cy="50%" r="55%">
-            <stop offset="0%" stopColor="rgba(0,120,200,0.22)" />
-            <stop offset="100%" stopColor="rgba(0,60,140,0.06)" />
+            <stop offset="0%" stopColor="rgba(0,194,255,0.12)" />
+            <stop offset="100%" stopColor="rgba(0,60,140,0.03)" />
           </radialGradient>
           {/* Glow filters per risk */}
           {['#22c55e','#eab308','#ef4444'].map(c => (
@@ -291,11 +292,11 @@ function MapCanvas({ stations, selected, onSelect, zoom, onZoom }: {
 
         {/* Bangladesh boundary — from Natural Earth, 2280 real vertices */}
         {pathD && (
-          <>
-            <path d={pathD} fill="url(#bdGrad)" stroke="rgba(0,194,255,0.55)" strokeWidth="1.3" strokeLinejoin="round" />
-            {/* Interior texture */}
-            <path d={pathD} fill="none" stroke="rgba(0,170,220,0.07)" strokeWidth="5" strokeLinejoin="round" />
-          </>
+          <g style={{ filter: 'drop-shadow(0 0 15px rgba(0,194,255,0.25)) drop-shadow(0 0 40px rgba(0,194,255,0.15))' }}>
+            <path d={pathD} fill="url(#bdGrad)" stroke="rgba(0,194,255,0.7)" strokeWidth="1.5" strokeLinejoin="round" />
+            <path d={pathD} fill="none" stroke="rgba(255,255,255,0.15)" strokeWidth="0.5" strokeLinejoin="round" />
+            <path d={pathD} fill="none" stroke="rgba(0,194,255,0.1)" strokeWidth="8" strokeLinejoin="round" />
+          </g>
         )}
 
         {/* Station markers */}
@@ -306,12 +307,17 @@ function MapCanvas({ stations, selected, onSelect, zoom, onZoom }: {
 
           return (
             <g key={s.id} onClick={() => onSelect(s.id)} style={{ cursor: 'pointer' }}>
-              {/* Pulse ring */}
+              {/* Radar Ping */}
               <motion.circle cx={s.px} cy={s.py}
-                r={isSel ? 28 : 22}
-                fill={ri.color} opacity={0.12}
-                animate={{ opacity: [0.14, 0.03, 0.14] }}
-                transition={{ duration: ri.pulseSeconds, repeat: Infinity, delay: idx * 0.5 }}
+                fill="none" stroke={ri.color} strokeWidth={1}
+                initial={{ r: 5, opacity: 0.8 }}
+                animate={{ r: isSel ? 45 : 35, opacity: 0 }}
+                transition={{ duration: ri.pulseSeconds, repeat: Infinity, delay: idx * 0.3 }}
+              />
+              {/* Static Glow */}
+              <circle cx={s.px} cy={s.py}
+                r={isSel ? 18 : 14}
+                fill={ri.color} opacity={0.15}
               />
               {/* Outer ring */}
               <circle cx={s.px} cy={s.py} r={isSel ? 11 : 8}
