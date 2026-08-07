@@ -92,8 +92,8 @@ const Tag = ({ label }: { label: string }) => (
   <motion.span
     whileHover={{ filter: 'brightness(1.35)', scale: 1.05 }}
     transition={{ duration: 0.15 }}
-    className="inline-flex items-center px-3 py-1.5 rounded-lg text-[11px] font-bold
-      bg-cyan-500/10 text-cyan-300 border border-cyan-500/20 tracking-wide cursor-default select-none"
+    className="inline-flex items-center px-2.5 py-1 rounded-md text-[10px] font-semibold
+      bg-white/5 text-slate-400 cursor-default select-none transition-colors hover:bg-white/10 hover:text-slate-300"
   >
     {label}
   </motion.span>
@@ -172,9 +172,9 @@ const SupervisorCard = () => {
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.65, ease: 'easeOut' }}
       className="relative rounded-2xl overflow-hidden
-        border border-cyan-400/20
-        shadow-[0_0_0_1px_rgba(0,212,255,0.05),0_8px_60px_rgba(0,0,0,0.6)]"
-      style={{ background: 'linear-gradient(140deg, #0e2247 0%, #091a38 60%, #060f24 100%)' }}
+        border-2 border-cyan-500/40
+        shadow-[0_0_0_1px_rgba(0,212,255,0.1),0_12px_60px_rgba(0,0,0,0.6)]"
+      style={{ background: 'linear-gradient(140deg, #112a4f 0%, #0d1f3a 100%)' }}
     >
       {/* Glowing top border */}
       <div className="absolute top-0 left-0 right-0 h-[2px]
@@ -230,9 +230,7 @@ const SupervisorCard = () => {
 
           {/* Info column */}
           <div className="flex-1 min-w-0 pt-1">
-            <p className="text-cyan-400 text-[10px] font-bold uppercase tracking-[0.2em] mb-1 font-mono">
-              {SUPERVISOR.role}
-            </p>
+
             <h2 className="text-3xl md:text-4xl font-extrabold text-white tracking-tight mb-2 leading-tight">
               {SUPERVISOR.name}
             </h2>
@@ -345,12 +343,9 @@ const MemberCard = ({ person, index }: { person: Person; index: number }) => {
         {/* Divider */}
         <div className="h-px bg-white/6 group-hover:bg-cyan-400/12 transition-colors duration-300" />
 
-        {/* Role + Bio */}
+        {/* Bio */}
         <div className="flex-1">
-          <p className="text-cyan-400 text-[10px] font-bold uppercase tracking-[0.2em] mb-3 font-mono">
-            {person.role}
-          </p>
-          <p className="text-slate-300 text-[13.5px] leading-[1.85]">
+          <p className="text-slate-300 text-[13.5px] leading-[1.85] line-clamp-2" title={person.bio}>
             {person.bio}
           </p>
         </div>
@@ -377,6 +372,7 @@ const AffiliationSection = () => {
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.6 }}
       className="relative rounded-2xl border border-white/8 overflow-hidden text-center
+      className="relative rounded-2xl border border-white/8 overflow-hidden
         shadow-[0_4px_40px_rgba(0,0,0,0.5)]"
       style={{ background: 'linear-gradient(140deg, #0d2040 0%, #091629 100%)' }}
     >
@@ -388,40 +384,40 @@ const AffiliationSection = () => {
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-72 h-48 blur-3xl pointer-events-none"
         style={{ background: 'radial-gradient(circle, rgba(0,212,255,0.07), transparent 70%)' }} />
 
-      <div className="relative p-12 md:p-16">
+      <div className="relative p-10 md:p-14 flex flex-col md:flex-row items-center gap-10 md:gap-14">
         {/* Logo */}
-        <div className="inline-flex items-center justify-center h-[90px] mb-8">
+        <div className="flex-shrink-0 inline-flex items-center justify-center w-40 md:w-48 h-32">
           <img 
             src="/ulab-dark.png" 
             alt="ULAB Logo" 
-            className="h-full w-auto object-contain drop-shadow-md"
+            className="w-full h-full object-contain drop-shadow-md"
           />
         </div>
 
-        <h3 className="text-2xl md:text-3xl font-extrabold text-white mb-2 tracking-tight">
-          University of Liberal Arts Bangladesh
-        </h3>
-        <p className="text-cyan-400 text-sm font-bold tracking-wider uppercase mb-1">
-          Department of Computer Science & Engineering
-        </p>
-        <p className="text-slate-500 text-sm mb-1 font-mono">Dhaka, Bangladesh</p>
+        {/* Text */}
+        <div className="flex-1 text-center md:text-left">
+          <h3 className="text-2xl md:text-3xl font-extrabold text-white mb-2 tracking-tight">
+            University of Liberal Arts Bangladesh
+          </h3>
+          <p className="text-cyan-400 text-[11px] font-bold tracking-[0.2em] uppercase mb-1">
+            Department of Computer Science & Engineering
+          </p>
+          <p className="text-slate-500 text-sm mb-6 font-mono">Dhaka, Bangladesh</p>
 
-        <div className="w-16 h-px bg-cyan-400/25 mx-auto my-6" />
+          <p className="text-slate-400 text-[15px] max-w-xl leading-relaxed mb-8 mx-auto md:mx-0">
+            Capstone project combining academic research, AI/ML engineering, and real-world
+            hydrological climate data to deliver a production-grade flood early warning system for Bangladesh.
+          </p>
 
-        <p className="text-slate-400 text-sm max-w-lg mx-auto leading-relaxed mb-8">
-          Capstone project combining academic research, AI/ML engineering, and real-world
-          hydrological climate data to deliver a production-grade flood early warning system for Bangladesh.
-        </p>
-
-        <div className="flex flex-wrap justify-center gap-2.5">
-          {tags.map(tag => (
-            <span key={tag}
-              className="px-4 py-2 rounded-full text-xs font-semibold cursor-default
-                bg-white/5 border border-white/10 text-slate-400
-                hover:text-white hover:border-white/20 transition-colors duration-200">
-              {tag}
-            </span>
-          ))}
+          <div className="flex flex-wrap justify-center md:justify-start gap-2.5">
+            {tags.map(tag => (
+              <span key={tag}
+                className="px-3 py-1.5 rounded-md text-[10px] font-semibold uppercase tracking-[0.1em]
+                  bg-white/5 text-slate-400 cursor-default transition-colors hover:text-slate-300">
+                {tag}
+              </span>
+            ))}
+          </div>
         </div>
       </div>
     </motion.div>
@@ -446,7 +442,7 @@ const About = () => {
             initial={{ opacity: 0, y: 28 }}
             animate={heroInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.7 }}
-            className="text-center mb-16"
+            className="text-center mb-24"
           >
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
@@ -479,12 +475,7 @@ const About = () => {
           <StatsBanner />
 
           {/* ── Supervisor ── */}
-          <SectionLabel
-            icon={Star}
-            label="Project Supervisor"
-            sub="Faculty mentor and AI/ML research lead for the OceanSense capstone project"
-          />
-          <div className="mb-16">
+          <div className="mb-24">
             <SupervisorCard />
           </div>
 
@@ -494,7 +485,7 @@ const About = () => {
             label="Core Development Team"
             sub="4 engineers responsible for the full-stack AI platform"
           />
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-16">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-24">
             {MEMBERS.map((m, i) => (
               <MemberCard key={m.name} person={m} index={i} />
             ))}
