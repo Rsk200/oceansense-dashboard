@@ -1,300 +1,224 @@
-import { useState, useRef } from 'react';
+import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import {
-  GraduationCap, Briefcase, Code2, Globe2,
-  ExternalLink, GitBranch, Mail, ChevronDown, ChevronUp,
-  Star, FlaskConical, Cpu, BookOpen, Users, Award
+  GraduationCap, Cpu, Users, Award,
+  Mail, Waves, FlaskConical
 } from 'lucide-react';
 import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
 
+/* ─── LinkedIn SVG Icon (original brand icon) ───────────── */
+const LinkedInIcon = ({ className = 'w-4 h-4' }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+  </svg>
+);
+
 /* ─── Types ─────────────────────────────────────────────── */
-interface TeamMember {
-  id: string;
+interface Person {
   name: string;
+  title: string;
+  degree: string;
   role: string;
-  dept: string;
-  image: string;
-  shortBio: string;
-  fullBio: string;
-  specialties: string[];
-  education: string[];
+  bio: string;
   skills: string[];
-  linkedin?: string;
-  github?: string;
+  photo: string;
+  linkedin: string;
   email?: string;
-  isSupervisor?: boolean;
-  researchFocus?: string[];
 }
 
 /* ─── Data ───────────────────────────────────────────────── */
-const SUPERVISOR: TeamMember = {
-  id: 'supervisor',
-  isSupervisor: true,
+const SUPERVISOR: Person = {
   name: 'Nasir Uddin Ahmed',
-  role: 'Project Supervisor',
-  dept: 'Lecturer, Dept. of Computer Science & Engineering · ULAB',
-  image: '/team/supervisor.jpeg',
-  shortBio: 'Data Scientist, Software Engineer & Academic mentor with an MSc in Data Science (Distinction) from Universiti Malaya and a BSc in CSE (Magna Cum Laude) from United International University.',
-  fullBio: `I am a Lecturer in the Department of Computer Science & Engineering at ULAB (University of Liberal Arts Bangladesh), a Data Scientist, and a Software Engineer with a strong academic background — holding an MSc in Data Science (Distinction, Universiti Malaya) and a BSc in CSE (Magna Cum Laude, United International University).
-
-My professional journey spans teaching, research, and industry experience. I specialize in Data Science, AI, NLP, and Machine Learning, with hands-on expertise in Python, deep learning models (including BERT for NLP), and large-scale data processing frameworks like Apache Spark.
-
-I have served as Co-founder & CTO of Hadodo IT Ltd., leading ESG-focused digital innovation projects, and worked in various software development and data roles, contributing to end-to-end AI-driven solutions. My research focuses on Industry 4.0, strategic agility, digital innovation performance, and sentiment analysis, with publications in international conferences and journals.
-
-I am passionate about mentoring students, driving impactful research, and bridging academia with industry to foster sustainable digital transformation.`,
-  specialties: [
-    'Teaching & Academic Mentoring in AI, ML, and Data Science',
-    'NLP, Sentiment Analysis & Deep Learning',
-    'Software Development & Agile Practices',
-    'Research on Industry 4.0, ESG & Digital Innovation',
-    'Data Visualization & Analytics',
-  ],
-  education: [
-    'MSc in Data Science — Distinction, Universiti Malaya',
-    'BSc in CSE — Magna Cum Laude, United International University',
-  ],
-  skills: ['Python', 'BERT / NLP', 'Apache Spark', 'Deep Learning', 'Data Science', 'Agile', 'ESG Research'],
-  researchFocus: ['Industry 4.0', 'Sentiment Analysis', 'Digital Innovation', 'Strategic Agility'],
-  linkedin: 'https://www.linkedin.com/in/nasir-uddin-ahmed/',
+  title: 'Lecturer, Dept. of CSE, ULAB',
+  degree: 'MSc Data Science (Distinction), Universiti Malaya  ·  BSc CSE (Magna Cum Laude), UIU',
+  role: 'Research Supervisor & AI/ML Architecture Lead',
+  bio: 'Specializes in NLP, deep learning, and large-scale data processing. Industry experience as Co-founder & CTO of Hadodo IT Ltd. with ESG-focused digital innovation and Industry 4.0 research.',
+  skills: ['Python', 'Deep Learning', 'NLP', 'Apache Spark', 'Data Science'],
+  photo: '/team/supervisor.jpeg',
+  linkedin: 'https://www.linkedin.com/in/nasir-uddin-ahmed-184469137/',
 };
 
-const MEMBERS: TeamMember[] = [
+const MEMBERS: Person[] = [
   {
-    id: 'member1',
     name: 'Rakibul Hasan',
-    role: 'Team Member',
-    dept: 'Computer Science & Engineering · ULAB',
-    image: '/team/member1.jpeg',
-    shortBio: 'Passionate CSE student with a track record of consistently bright academic results and a diverse technical skill set spanning programming, OOP, and digital marketing.',
-    fullBio: `I am Rakibul Hasan. In my childhood, I was always brilliant, constantly striving to improve myself and never backing down from any challenge. My academic journey has been marked by consistently bright results, a trend that continues as I pursue a degree in Computer Science and Engineering at university.
-
-I have cultivated a diverse skill set, including proficiency in programming, object-oriented programming (OOP), and digital marketing. In addition to my technical abilities, I also excel in teaching and influencing others, making me a valuable resource to my family, friends, and relatives.
-
-Beyond professional pursuits, I am deeply committed to embodying the qualities of a good person and making a positive impact on my community and society as a whole. Whether through academic achievements, professional endeavors, or personal interactions, I am dedicated to leveraging my skills and talents for the betterment of others.
-
-As I continue to grow and evolve, I remain steadfast in my commitment to continuous learning and making meaningful contributions to society and my country.`,
-    specialties: ['Programming & OOP', 'Digital Marketing', 'Academic Excellence', 'Teaching & Mentoring'],
-    education: ['BSc in CSE (ongoing) — ULAB'],
-    skills: ['Python', 'OOP', 'Digital Marketing', 'Teaching'],
+    title: 'BSc in CSE (Ongoing), ULAB',
+    degree: '',
+    role: 'Backend & Data Pipeline Engineer',
+    bio: 'Architected the real-time hydrological data ingestion pipeline across 3 monitoring stations. Implemented flood-risk scoring APIs and OOP-based backend modules powering the prediction engine.',
+    skills: ['Python', 'FastAPI', 'OOP', 'REST APIs'],
+    photo: '/team/member1.jpeg',
+    linkedin: 'https://www.linkedin.com/in/rakibul-hasan20/',
   },
   {
-    id: 'member2',
     name: 'Rabbi Sadnan Khan',
-    role: 'Team Member',
-    dept: 'Computer Science & Engineering · ULAB',
-    image: '/team/member2.jpg',
-    shortBio: 'Full-stack developer and AI enthusiast contributing to the OceanSense platform architecture, dashboard design, and real-time data visualizations.',
-    fullBio: `Rabbi Sadnan Khan is a Computer Science & Engineering student at ULAB with a strong focus on full-stack development, AI integration, and modern web technologies.
-
-As a core contributor to OceanSense, Rabbi led the development of the premium dashboard interface, real-time risk visualization modules, and the AI pipeline integration layer. His deep interest in creating intuitive and data-driven user interfaces has been instrumental in translating complex flood-risk data into actionable insights for end-users.
-
-He is passionate about building scalable, beautiful, and performant software that makes a real-world impact.`,
-    specialties: ['Full-Stack Development', 'UI/UX Design', 'Real-time Data Visualization', 'AI Integration'],
-    education: ['BSc in CSE (ongoing) — ULAB'],
-    skills: ['React', 'TypeScript', 'Python', 'FastAPI', 'Tailwind CSS', 'Framer Motion'],
-    linkedin: 'https://www.linkedin.com/in/rabbi-sadnan-khan/',
+    title: 'BSc in CSE (Ongoing), ULAB',
+    degree: '',
+    role: 'Full-Stack & Dashboard Lead',
+    bio: 'Built the production-grade React/TypeScript dashboard with glassmorphic UI, real-time risk visualization, and live ENSO forecast integration. Owns the full frontend architecture and deployment pipeline.',
+    skills: ['React', 'TypeScript', 'FastAPI', 'Framer Motion'],
+    photo: '/team/member2.jpg',
+    linkedin: 'https://www.linkedin.com/in/rabbisadnan26/',
   },
   {
-    id: 'member3',
     name: 'Faria Islam Sara',
-    role: 'Team Member',
-    dept: 'Computer Science & Engineering · ULAB',
-    image: '/team/member3.jpeg',
-    shortBio: 'Final-year CSE undergraduate passionate about AI, ML, Climate Technology, and Full-Stack Development, with hands-on experience in NASA datasets and climate-risk prediction.',
-    fullBio: `Final-year Computer Science and Engineering undergraduate passionate about Artificial Intelligence, Machine Learning, Climate Technology, and Full-Stack Development.
-
-I have worked on projects involving NASA datasets, weather forecasting, climate-risk prediction, and AI-driven educational platforms. My technical interests include machine learning, data analysis, backend development, and sustainable technology solutions.
-
-Skilled in Python, Django, JavaScript, MongoDB, REST APIs, and software engineering methodologies including Agile Scrum.
-
-Currently seeking opportunities in software engineering, AI/ML research, and impactful technology projects where I can apply my technical and problem-solving skills.`,
-    specialties: ['Machine Learning & AI', 'Climate Risk Prediction', 'Backend Development', 'NASA Dataset Analysis'],
-    education: ['BSc in CSE (Final Year) — ULAB'],
-    skills: ['Python', 'Django', 'JavaScript', 'MongoDB', 'REST APIs', 'Agile Scrum', 'Machine Learning'],
-    github: 'https://github.com/',
+    title: 'BSc in CSE (Final Year), ULAB',
+    degree: '',
+    role: 'ML Engineer & Climate Data Analyst',
+    bio: 'Designed and trained 6+ ML models for ENSO-based flood prediction using NASA and NOAA climate datasets. Led data preprocessing pipelines and model evaluation frameworks with Django backend integration.',
+    skills: ['Python', 'Machine Learning', 'Django', 'MongoDB'],
+    photo: '/team/member3.jpeg',
+    linkedin: 'https://www.linkedin.com/in/faria-islam-sara-73ab0b409/',
   },
   {
-    id: 'member4',
     name: 'Maruf Hossain',
-    role: 'Team Member',
-    dept: 'Computer Science & Engineering · ULAB',
-    image: '/team/member4.jpg',
-    shortBio: 'AI/ML enthusiast and full-stack developer who co-developed OceanSense as his capstone project, combining machine learning with climate data for long-term flood forecasting in Bangladesh.',
-    fullBio: `I am a Computer Science and Engineering student at the University of Liberal Arts Bangladesh with a passion for software development, artificial intelligence, machine learning, and web technologies.
-
-I enjoy designing and building practical solutions using Python, JavaScript, HTML, CSS, and modern development tools. I am passionate about solving real-world problems through technology while continuously expanding my knowledge of programming, software engineering, and emerging technologies.
-
-My recent work includes OceanSense, an AI-powered early disaster warning system developed as my capstone project. The project combines machine learning and climate data to support long-term flood forecasting in Bangladesh. Alongside this, I have developed responsive web applications, including a personal portfolio website and an interactive JavaScript calculator, strengthening my frontend development and problem-solving skills.
-
-I have also submitted a research paper based on the OceanSense project and continue to explore AI-driven solutions through research and hands-on development.
-
-I am currently seeking internship and research opportunities where I can apply my technical skills, collaborate with talented teams, and continue growing as a software engineer while expanding my expertise in artificial intelligence and machine learning.`,
-    specialties: ['AI & Machine Learning', 'Software Development', 'Web Development', 'Research & Publication'],
-    education: ['BSc in CSE (ongoing) — ULAB'],
-    skills: ['Python', 'JavaScript', 'HTML/CSS', 'Machine Learning', 'Data Science', 'Cloud Computing', 'Computer Vision'],
-    github: 'https://github.com/',
+    title: 'BSc in CSE (Ongoing), ULAB',
+    degree: '',
+    role: 'AI/ML Engineer & Research Lead',
+    bio: 'Developed XGBoost and LSTM models for long-range flood forecasting. Led research paper authorship, AI model benchmarking, and integration of ML inference into the OceanSense production API.',
+    skills: ['Python', 'XGBoost', 'LSTM', 'Data Science'],
+    photo: '/team/member4.jpg',
+    linkedin: 'https://www.linkedin.com/in/maruf-hossain-9055b12a1/',
   },
 ];
 
+/* ─── Stats ──────────────────────────────────────────────── */
+const STATS = [
+  { icon: Users, value: '4 + 1', label: 'Team Members' },
+  { icon: Cpu, value: '6+', label: 'AI Models Trained' },
+  { icon: Waves, value: '3', label: 'Monitoring Stations' },
+  { icon: Award, value: '1', label: 'Research Paper Submitted' },
+];
+
 /* ─── Skill Tag ──────────────────────────────────────────── */
-const SkillTag = ({ label }: { label: string }) => (
-  <span className="inline-flex items-center px-2.5 py-1 rounded-md text-[11px] font-semibold
-    bg-accent/10 text-accent border border-accent/20 tracking-wide">
+const Tag = ({ label }: { label: string }) => (
+  <motion.span
+    whileHover={{ filter: 'brightness(1.25)' }}
+    className="inline-flex items-center px-2.5 py-[5px] rounded-md text-[11px] font-semibold
+      bg-[#00d4ff12] text-[#00d4ff] border border-[#00d4ff25] tracking-wide cursor-default select-none"
+  >
     {label}
-  </span>
+  </motion.span>
 );
 
-/* ─── Supervisor Card ────────────────────────────────────── */
-const SupervisorCard = ({ member }: { member: TeamMember }) => {
-  const [expanded, setExpanded] = useState(false);
+/* ─── Section Divider ────────────────────────────────────── */
+const SectionLabel = ({ icon: Icon, label }: { icon: React.ElementType; label: string }) => (
+  <div className="relative flex items-center gap-4 mb-10">
+    <div className="flex-1 h-px bg-gradient-to-r from-transparent via-[#00d4ff30] to-transparent" />
+    <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-[#00d4ff0a] border border-[#00d4ff18]
+      text-[#00d4ff] text-[11px] font-bold uppercase tracking-widest whitespace-nowrap">
+      <Icon className="w-3 h-3" />
+      {label}
+    </div>
+    <div className="flex-1 h-px bg-gradient-to-r from-transparent via-[#00d4ff30] to-transparent" />
+  </div>
+);
+
+/* ─── Stats Banner ───────────────────────────────────────── */
+const StatsBanner = () => {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: '-80px' });
+  const inView = useInView(ref, { once: true });
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 16 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.55 }}
+      className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-16"
+    >
+      {STATS.map(({ icon: Icon, value, label }, i) => (
+        <motion.div
+          key={label}
+          initial={{ opacity: 0, scale: 0.92 }}
+          animate={inView ? { opacity: 1, scale: 1 } : {}}
+          transition={{ duration: 0.4, delay: i * 0.07 }}
+          whileHover={{ translateY: -3, boxShadow: '0 8px 28px rgba(0,212,255,0.12)' }}
+          className="rounded-xl p-6 text-center border border-[#00d4ff12]
+            bg-gradient-to-b from-[#0f1d32] to-[#0a1628] cursor-default"
+        >
+          <Icon className="w-5 h-5 text-[#00d4ff] mx-auto mb-3 opacity-75" />
+          <div className="text-3xl font-bold text-white mb-1 tracking-tight">{value}</div>
+          <div className="text-[#94a3b8] text-[11px] uppercase tracking-widest">{label}</div>
+        </motion.div>
+      ))}
+    </motion.div>
+  );
+};
+
+/* ─── Supervisor Card ────────────────────────────────────── */
+const SupervisorCard = () => {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: '-60px' });
 
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 40 }}
+      initial={{ opacity: 0, y: 28 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.7, ease: 'easeOut' }}
-      className="relative rounded-2xl overflow-hidden border border-accent/25
-        bg-gradient-to-br from-[#0b1e3d]/90 via-[#061428]/95 to-[#030a18]/90
-        shadow-[0_0_60px_rgba(0,194,255,0.08)] backdrop-blur-xl"
+      transition={{ duration: 0.6, ease: 'easeOut' }}
+      className="relative rounded-2xl overflow-hidden border border-[#00d4ff28]
+        bg-gradient-to-br from-[#0f1d38] via-[#0c1830] to-[#080f20]
+        shadow-[0_0_50px_rgba(0,212,255,0.06)]"
     >
-      {/* Top accent glow bar */}
+      {/* Top accent line */}
       <div className="absolute top-0 left-0 right-0 h-[2px]
-        bg-gradient-to-r from-transparent via-accent to-transparent opacity-70" />
+        bg-gradient-to-r from-transparent via-[#00d4ff] to-transparent opacity-80" />
 
-      {/* Corner badge */}
-      <div className="absolute top-5 right-5 flex items-center gap-1.5 px-3 py-1.5 rounded-full
-        bg-accent/15 border border-accent/30 text-accent text-[11px] font-bold uppercase tracking-widest">
-        <Star className="w-3 h-3" />
-        Project Supervisor
-      </div>
+      <div className="p-8 md:p-10">
+        <div className="flex flex-col md:flex-row gap-8 items-start">
 
-      <div className="p-8 md:p-12">
-        <div className="flex flex-col lg:flex-row gap-10 items-start">
-
-          {/* Avatar */}
-          <div className="flex-shrink-0 flex flex-col items-center gap-4">
-            <div className="relative">
-              <div className="absolute inset-0 rounded-full bg-accent/30 blur-2xl scale-110 opacity-50" />
-              <div className="w-40 h-40 rounded-full overflow-hidden border-2 border-accent/40
-                shadow-[0_0_40px_rgba(0,194,255,0.3)] relative z-10">
-                <img
-                  src={member.image}
-                  alt={member.name}
-                  className="w-full h-full object-cover object-top"
-                  onError={(e) => {
-                    const t = e.currentTarget;
-                    t.style.display = 'none';
-                    (t.parentElement as HTMLElement).classList.add('flex', 'items-center', 'justify-center', 'bg-accent/10');
-                  }}
-                />
+          {/* Photo */}
+          <div className="flex-shrink-0">
+            <div className="relative w-28 h-28">
+              <div className="absolute inset-0 rounded-full bg-[#00d4ff20] blur-xl" />
+              <div className="w-28 h-28 rounded-full overflow-hidden border-2 border-[#00d4ff35]
+                shadow-[0_0_28px_rgba(0,212,255,0.2)] relative z-10">
+                <img src={SUPERVISOR.photo} alt={SUPERVISOR.name}
+                  className="w-full h-full object-cover object-top" />
               </div>
-            </div>
-
-            {/* Social Links */}
-            <div className="flex items-center gap-3">
-              {member.linkedin && (
-                <a href={member.linkedin} target="_blank" rel="noreferrer"
-                  className="p-2 rounded-lg bg-white/5 border border-white/10 text-white/60
-                    hover:text-accent hover:border-accent/30 transition-all duration-200"
-                  title="LinkedIn">
-                  <ExternalLink className="w-4 h-4" />
-                </a>
-              )}
-              {member.email && (
-                <a href={`mailto:${member.email}`}
-                  className="p-2 rounded-lg bg-white/5 border border-white/10 text-white/60
-                    hover:text-accent hover:border-accent/30 transition-all duration-200">
-                  <Mail className="w-4 h-4" />
-                </a>
-              )}
             </div>
           </div>
 
-          {/* Info */}
+          {/* Content */}
           <div className="flex-1 min-w-0">
-            <p className="text-accent text-xs font-bold uppercase tracking-widest mb-1 font-mono">
-              Project Supervisor
-            </p>
-            <h2 className="text-3xl md:text-4xl font-bold text-white tracking-tight mb-1">
-              {member.name}
-            </h2>
-            <p className="text-white/50 text-sm mb-6 flex items-center gap-2">
-              <Briefcase className="w-3.5 h-3.5 flex-shrink-0" />
-              {member.dept}
+            {/* Role badge */}
+            <p className="text-[#00d4ff] text-[11px] font-bold uppercase tracking-[0.12em] mb-2 font-mono">
+              {SUPERVISOR.role}
             </p>
 
-            {/* Education Pills */}
-            <div className="flex flex-wrap gap-2 mb-6">
-              {member.education.map(edu => (
-                <div key={edu} className="flex items-center gap-2 px-3 py-1.5 rounded-full
-                  bg-white/5 border border-white/10 text-white/70 text-xs">
-                  <GraduationCap className="w-3.5 h-3.5 text-accent flex-shrink-0" />
-                  {edu}
-                </div>
-              ))}
+            {/* Name + social */}
+            <div className="flex items-center gap-3 mb-1 flex-wrap">
+              <h2 className="text-2xl md:text-3xl font-bold text-white tracking-tight">
+                {SUPERVISOR.name}
+              </h2>
+              <a href={SUPERVISOR.linkedin} target="_blank" rel="noreferrer"
+                className="flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-semibold
+                  bg-[#0077b510] border border-[#0077b530] text-[#0ea5e9]
+                  hover:bg-[#0077b520] hover:border-[#0077b550] transition-all duration-200"
+                title="LinkedIn Profile">
+                <LinkedInIcon className="w-3 h-3" />
+                LinkedIn
+              </a>
             </div>
 
-            {/* Short bio */}
-            <p className="text-white/65 leading-relaxed mb-4">
-              {member.shortBio}
+            {/* Title */}
+            <p className="text-[#94a3b8] text-sm mb-1">{SUPERVISOR.title}</p>
+
+            {/* Degrees */}
+            <div className="flex items-start gap-2 mb-4">
+              <GraduationCap className="w-4 h-4 text-[#00d4ff] flex-shrink-0 mt-0.5 opacity-70" />
+              <p className="text-[#94a3b8] text-sm">{SUPERVISOR.degree}</p>
+            </div>
+
+            {/* Bio */}
+            <p className="text-white/75 text-sm leading-relaxed mb-5 max-w-2xl">
+              {SUPERVISOR.bio}
             </p>
 
-            {/* Expandable full bio */}
-            {expanded && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
-                exit={{ opacity: 0, height: 0 }}
-                transition={{ duration: 0.3 }}
-                className="text-white/55 leading-relaxed text-sm whitespace-pre-line mb-4"
-              >
-                {member.fullBio}
-              </motion.div>
-            )}
-
-            <button
-              onClick={() => setExpanded(!expanded)}
-              className="flex items-center gap-1.5 text-accent text-xs font-semibold
-                hover:text-accent/80 transition-colors mb-6"
-            >
-              {expanded ? <><ChevronUp className="w-3.5 h-3.5" /> Show Less</> : <><ChevronDown className="w-3.5 h-3.5" /> Read Full Bio</>}
-            </button>
-
-            {/* Skill tags */}
-            <div className="flex flex-wrap gap-2 mb-6">
-              {member.skills.map(s => <SkillTag key={s} label={s} />)}
+            {/* Skills */}
+            <div className="flex flex-wrap gap-2">
+              {SUPERVISOR.skills.map(s => <Tag key={s} label={s} />)}
             </div>
-
-            {/* Specialties */}
-            <div className="grid sm:grid-cols-2 gap-2">
-              {member.specialties.map(s => (
-                <div key={s} className="flex items-start gap-2 text-white/60 text-sm">
-                  <div className="w-1.5 h-1.5 rounded-full bg-accent mt-1.5 flex-shrink-0" />
-                  {s}
-                </div>
-              ))}
-            </div>
-
-            {/* Research focus tags */}
-            {member.researchFocus && (
-              <div className="mt-6 pt-5 border-t border-white/8">
-                <p className="text-white/40 text-xs uppercase tracking-widest font-mono mb-3 flex items-center gap-2">
-                  <FlaskConical className="w-3.5 h-3.5" />Research Focus
-                </p>
-                <div className="flex flex-wrap gap-2">
-                  {member.researchFocus.map(r => (
-                    <span key={r} className="px-3 py-1 rounded-full text-xs font-medium
-                      bg-violet-500/10 border border-violet-500/20 text-violet-300">
-                      {r}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
           </div>
         </div>
       </div>
@@ -303,147 +227,93 @@ const SupervisorCard = ({ member }: { member: TeamMember }) => {
 };
 
 /* ─── Member Card ────────────────────────────────────────── */
-const MemberCard = ({ member, index }: { member: TeamMember; index: number }) => {
-  const [expanded, setExpanded] = useState(false);
+const MemberCard = ({ person, index }: { person: Person; index: number }) => {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: '-60px' });
+  const inView = useInView(ref, { once: true, margin: '-40px' });
 
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 30 }}
+      initial={{ opacity: 0, y: 24 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.5, delay: index * 0.1, ease: 'easeOut' }}
-      className="group relative rounded-2xl overflow-hidden border border-white/8
-        bg-gradient-to-b from-[#0b1829]/80 to-[#040c1a]/90
-        hover:border-accent/25 hover:shadow-[0_0_30px_rgba(0,194,255,0.07)]
-        transition-all duration-400 backdrop-blur-md flex flex-col"
+      transition={{ duration: 0.5, delay: index * 0.09, ease: 'easeOut' }}
+      whileHover={{ translateY: -4, boxShadow: '0 16px 48px rgba(0,212,255,0.09)' }}
+      className="group relative rounded-2xl border border-[#ffffff0c]
+        bg-gradient-to-b from-[#0f1d32] to-[#0a1424]
+        hover:border-[#00d4ff20] transition-all duration-300 flex flex-col overflow-hidden"
     >
-      {/* Hover glow top bar */}
+      {/* Hover accent line */}
       <div className="absolute top-0 left-0 right-0 h-[2px]
-        bg-gradient-to-r from-transparent via-accent to-transparent
-        opacity-0 group-hover:opacity-60 transition-opacity duration-400" />
+        bg-gradient-to-r from-transparent via-[#00d4ff] to-transparent
+        opacity-0 group-hover:opacity-70 transition-opacity duration-300" />
 
-      {/* Header with photo */}
-      <div className="relative p-6 pb-4 flex items-start gap-5">
-        <div className="relative flex-shrink-0">
-          <div className="absolute inset-0 rounded-full bg-accent/20 blur-xl opacity-0 group-hover:opacity-60 transition-opacity duration-400" />
-          <div className="w-20 h-20 rounded-full overflow-hidden border border-white/15
-            group-hover:border-accent/35 transition-colors duration-300 relative z-10 shadow-xl">
-            <img
-              src={member.image}
-              alt={member.name}
-              className="w-full h-full object-cover object-top"
-              onError={(e) => {
-                const t = e.currentTarget;
-                t.style.display = 'none';
-                (t.parentElement as HTMLElement).classList.add('flex', 'items-center', 'justify-center', 'bg-white/5');
-              }}
-            />
-          </div>
-        </div>
-
-        <div className="flex-1 min-w-0 pt-1">
-          <p className="text-accent text-[10px] font-bold uppercase tracking-widest font-mono mb-0.5">
-            Team Member
-          </p>
-          <h3 className="text-lg font-bold text-white tracking-tight leading-snug">
-            {member.name}
-          </h3>
-          <p className="text-white/40 text-xs mt-0.5 flex items-center gap-1.5">
-            <BookOpen className="w-3 h-3 flex-shrink-0" />
-            {member.education[0]}
-          </p>
-
-          {/* Social Links */}
-          <div className="flex items-center gap-2 mt-2">
-            {member.linkedin && (
-              <a href={member.linkedin} target="_blank" rel="noreferrer"
-                className="p-1.5 rounded-md bg-white/5 border border-white/8 text-white/50
-                  hover:text-accent hover:border-accent/30 transition-all duration-200"
-                title="LinkedIn">
-                <ExternalLink className="w-3 h-3" />
-              </a>
-            )}
-            {member.github && (
-              <a href={member.github} target="_blank" rel="noreferrer"
-                className="p-1.5 rounded-md bg-white/5 border border-white/8 text-white/50
-                  hover:text-accent hover:border-accent/30 transition-all duration-200"
-                title="GitHub">
-                <GitBranch className="w-3 h-3" />
-              </a>
-            )}
-            {member.email && (
-              <a href={`mailto:${member.email}`}
-                className="p-1.5 rounded-md bg-white/5 border border-white/8 text-white/50
-                  hover:text-accent hover:border-accent/30 transition-all duration-200">
-                <Mail className="w-3 h-3" />
-              </a>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* Divider */}
-      <div className="mx-6 h-px bg-white/6 group-hover:bg-white/10 transition-colors duration-300" />
-
-      {/* Body */}
-      <div className="p-6 pt-4 flex-1 flex flex-col">
-        {/* Short bio */}
-        <p className="text-white/55 text-sm leading-relaxed mb-3">
-          {member.shortBio}
-        </p>
-
-        {/* Expandable full bio */}
-        {expanded && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.3 }}
-            className="text-white/45 text-xs leading-relaxed whitespace-pre-line mb-3"
-          >
-            {member.fullBio}
-          </motion.div>
-        )}
-
-        <button
-          onClick={() => setExpanded(!expanded)}
-          className="flex items-center gap-1 text-accent/80 text-xs font-semibold
-            hover:text-accent transition-colors mb-4 self-start"
-        >
-          {expanded ? <><ChevronUp className="w-3 h-3" /> Less</> : <><ChevronDown className="w-3 h-3" /> Read More</>}
-        </button>
-
-        {/* Specialties */}
-        <div className="space-y-1.5 mb-4">
-          {member.specialties.map(s => (
-            <div key={s} className="flex items-center gap-2 text-white/50 text-xs">
-              <div className="w-1 h-1 rounded-full bg-accent flex-shrink-0" />
-              {s}
+      <div className="p-7 flex flex-col gap-5 flex-1">
+        {/* Header */}
+        <div className="flex items-start gap-4">
+          {/* Photo */}
+          <div className="relative flex-shrink-0">
+            <div className="w-16 h-16 rounded-full overflow-hidden border border-[#ffffff15]
+              group-hover:border-[#00d4ff30] transition-colors duration-300 shadow-lg">
+              <img src={person.photo} alt={person.name}
+                className="w-full h-full object-cover object-top" />
             </div>
-          ))}
+          </div>
+
+          {/* Name block */}
+          <div className="flex-1 min-w-0 pt-0.5">
+            <div className="flex items-center gap-2 flex-wrap mb-0.5">
+              <h3 className="text-[18px] font-semibold text-white tracking-tight leading-snug">
+                {person.name}
+              </h3>
+              <a href={person.linkedin} target="_blank" rel="noreferrer"
+                className="p-1.5 rounded-md bg-[#0077b50c] border border-[#0077b525] text-[#0ea5e9]
+                  hover:bg-[#0077b518] hover:border-[#0077b540] transition-all duration-200"
+                title="LinkedIn Profile">
+                <LinkedInIcon className="w-3 h-3" />
+              </a>
+              {person.email && (
+                <a href={`mailto:${person.email}`}
+                  className="p-1.5 rounded-md bg-white/4 border border-white/8 text-[#94a3b8]
+                    hover:text-white hover:border-white/15 transition-all duration-200"
+                  title="Email">
+                  <Mail className="w-3 h-3" />
+                </a>
+              )}
+            </div>
+            <p className="text-[#94a3b8] text-xs">{person.title}</p>
+          </div>
         </div>
 
-        {/* Skill tags */}
-        <div className="flex flex-wrap gap-1.5 mt-auto pt-4 border-t border-white/6">
-          {member.skills.map(s => <SkillTag key={s} label={s} />)}
+        {/* Divider */}
+        <div className="h-px bg-[#ffffff08] group-hover:bg-[#00d4ff10] transition-colors duration-300" />
+
+        {/* Role */}
+        <div>
+          <p className="text-[#00d4ff] text-[11px] font-bold uppercase tracking-[0.1em] mb-3 font-mono">
+            {person.role}
+          </p>
+
+          {/* Bio — 2 sentences max, no toggle */}
+          <p className="text-[#94a3b8] text-sm leading-relaxed">
+            {person.bio}
+          </p>
+        </div>
+
+        {/* Skills — bottom */}
+        <div className="flex flex-wrap gap-1.5 mt-auto pt-2">
+          {person.skills.map(s => <Tag key={s} label={s} />)}
         </div>
       </div>
     </motion.div>
   );
 };
 
-/* ─── Stats Banner ───────────────────────────────────────── */
-const stats = [
-  { icon: Users, label: 'Team Members', value: '4 + 1' },
-  { icon: Cpu, label: 'AI Models Trained', value: '6+' },
-  { icon: Globe2, label: 'Stations Monitored', value: '3' },
-  { icon: Award, label: 'Research Paper', value: 'Submitted' },
-];
-
-const StatsBanner = () => {
+/* ─── Affiliation Section ────────────────────────────────── */
+const AffiliationSection = () => {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true });
+
+  const tags = ['Capstone Project', 'AI/ML Research', 'Climate Tech', 'Bangladesh', 'Flood Warning System'];
 
   return (
     <motion.div
@@ -451,131 +321,97 @@ const StatsBanner = () => {
       initial={{ opacity: 0, y: 20 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.6 }}
-      className="grid grid-cols-2 md:grid-cols-4 gap-4 my-16"
+      className="rounded-2xl border border-[#ffffff08] p-10 md:p-12 text-center
+        bg-gradient-to-br from-[#0f1d32]/60 to-[#0a1424]/80 backdrop-blur-sm"
     >
-      {stats.map(({ icon: Icon, label, value }, i) => (
-        <motion.div
-          key={label}
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={inView ? { opacity: 1, scale: 1 } : {}}
-          transition={{ duration: 0.4, delay: i * 0.08 }}
-          className="rounded-xl p-5 text-center border border-white/8
-            bg-gradient-to-b from-white/4 to-transparent backdrop-blur-sm
-            hover:border-accent/20 transition-colors duration-300"
-        >
-          <Icon className="w-5 h-5 text-accent mx-auto mb-2 opacity-80" />
-          <div className="text-2xl font-bold text-white mb-0.5">{value}</div>
-          <div className="text-white/40 text-xs uppercase tracking-wider">{label}</div>
-        </motion.div>
-      ))}
+      {/* Logo mark */}
+      <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl
+        bg-[#00d4ff0f] border border-[#00d4ff1a] mb-6">
+        <GraduationCap className="w-7 h-7 text-[#00d4ff]" />
+      </div>
+
+      <h3 className="text-xl font-bold text-white mb-1 tracking-tight">
+        University of Liberal Arts Bangladesh
+      </h3>
+      <p className="text-[#00d4ff] text-sm font-semibold mb-4 tracking-wide">
+        Department of Computer Science & Engineering
+      </p>
+      <p className="text-[#94a3b8] text-sm max-w-lg mx-auto leading-relaxed mb-6">
+        Capstone Project combining academic research, AI/ML engineering, and real-world climate data to deliver a production-grade flood early warning system for Bangladesh.
+      </p>
+
+      <div className="flex flex-wrap justify-center gap-2">
+        {tags.map(tag => (
+          <span key={tag} className="px-3 py-1.5 rounded-full text-xs font-medium
+            bg-[#ffffff06] border border-[#ffffff0e] text-[#94a3b8]">
+            {tag}
+          </span>
+        ))}
+      </div>
     </motion.div>
   );
 };
 
-/* ─── Main About Page ────────────────────────────────────── */
+/* ─── Main Page ──────────────────────────────────────────── */
 const About = () => {
   const heroRef = useRef(null);
-  const heroInView = useInView(heroRef, { once: true });
+  const inView = useInView(heroRef, { once: true });
 
   return (
-    <div className="min-h-screen bg-ocean-radial overflow-hidden">
+    <div className="min-h-screen overflow-hidden" style={{ background: '#0a1628' }}>
       <Navbar />
 
-      <main className="pt-24 pb-24">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <main className="pt-28 pb-28">
+        <div className="max-w-5xl mx-auto px-5 sm:px-6 lg:px-8">
 
-          {/* ── Hero Section ── */}
+          {/* ── Hero ── */}
           <motion.div
             ref={heroRef}
-            initial={{ opacity: 0, y: 30 }}
-            animate={heroInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.7 }}
-            className="text-center mb-16"
+            initial={{ opacity: 0, y: 24 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.65 }}
+            className="text-center mb-14"
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full
-              bg-accent/10 border border-accent/20 text-accent text-xs font-bold
-              uppercase tracking-widest mb-6">
-              <Code2 className="w-3.5 h-3.5" />
-              The Team Behind OceanSense
+            {/* Badge */}
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full mb-6
+              bg-[#00d4ff0d] border border-[#00d4ff1e]
+              text-[#00d4ff] text-[11px] font-bold uppercase tracking-[0.12em]">
+              <FlaskConical className="w-3.5 h-3.5" />
+              Capstone Research Project · ULAB
             </div>
 
-            <h1 className="text-4xl md:text-6xl font-bold text-white tracking-tight mb-5 leading-tight">
-              Built by Researchers,<br />
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-accent via-cyan-300 to-accent">
-                Driven by Impact
+            <h1 className="text-4xl md:text-5xl font-bold text-white tracking-tight mb-5 leading-tight">
+              The Team Behind{' '}
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#00d4ff] via-[#67e8f9] to-[#00d4ff]">
+                OceanSense
               </span>
             </h1>
 
-            <p className="text-white/55 max-w-2xl mx-auto text-lg leading-relaxed">
-              OceanSense is a capstone research project developed at the University of Liberal Arts Bangladesh (ULAB), combining cutting-edge AI with real-time climate data to deliver life-saving flood early warnings for Bangladesh.
+            <p className="text-[#94a3b8] max-w-xl mx-auto text-base leading-relaxed">
+              An AI-powered flood early warning system for Bangladesh, developed at the University of Liberal Arts Bangladesh using machine learning, ENSO climate indices, and real-time hydrological data.
             </p>
           </motion.div>
 
           {/* ── Stats ── */}
           <StatsBanner />
 
-          {/* ── Divider with label ── */}
-          <div className="relative flex items-center gap-4 mb-12">
-            <div className="flex-1 h-px bg-gradient-to-r from-transparent via-accent/25 to-transparent" />
-            <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-accent/8 border border-accent/15
-              text-accent text-[11px] font-bold uppercase tracking-widest whitespace-nowrap">
-              <Star className="w-3 h-3" />
-              Project Supervisor
-            </div>
-            <div className="flex-1 h-px bg-gradient-to-r from-transparent via-accent/25 to-transparent" />
+          {/* ── Supervisor ── */}
+          <SectionLabel icon={Award} label="Project Supervisor" />
+          <div className="mb-14">
+            <SupervisorCard />
           </div>
 
-          {/* ── Supervisor Card ── */}
-          <div className="mb-16">
-            <SupervisorCard member={SUPERVISOR} />
-          </div>
-
-          {/* ── Divider with label ── */}
-          <div className="relative flex items-center gap-4 mb-12">
-            <div className="flex-1 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-            <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10
-              text-white/60 text-[11px] font-bold uppercase tracking-widest whitespace-nowrap">
-              <Users className="w-3 h-3" />
-              Development Team
-            </div>
-            <div className="flex-1 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
-          </div>
-
-          {/* ── Team Members Grid ── */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 mb-20">
-            {MEMBERS.map((member, i) => (
-              <MemberCard key={member.id} member={member} index={i} />
+          {/* ── Team ── */}
+          <SectionLabel icon={Users} label="Core Development Team" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-14">
+            {MEMBERS.map((m, i) => (
+              <MemberCard key={m.name} person={m} index={i} />
             ))}
           </div>
 
-          {/* ── University / Project Info footer band ── */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="rounded-2xl border border-white/8 p-8 md:p-12 text-center
-              bg-gradient-to-br from-white/3 to-transparent backdrop-blur-sm"
-          >
-            <div className="inline-flex items-center justify-center w-14 h-14 rounded-full
-              bg-accent/10 border border-accent/20 mb-5">
-              <GraduationCap className="w-7 h-7 text-accent" />
-            </div>
-            <h3 className="text-2xl font-bold text-white mb-2">University of Liberal Arts Bangladesh</h3>
-            <p className="text-accent text-sm font-semibold mb-4">Department of Computer Science & Engineering</p>
-            <p className="text-white/50 max-w-xl mx-auto text-sm leading-relaxed">
-              OceanSense was developed as a Capstone Project at ULAB, combining academic research, AI/ML engineering, and real-world climate data to create a production-grade flood early warning system for Bangladesh.
-            </p>
+          {/* ── Affiliation ── */}
+          <AffiliationSection />
 
-            <div className="mt-6 flex flex-wrap justify-center gap-3">
-              {['Capstone Project', 'AI/ML Research', 'Climate Tech', 'Bangladesh', 'Flood Warning System'].map(tag => (
-                <span key={tag} className="px-3 py-1.5 rounded-full text-xs font-medium
-                  bg-white/5 border border-white/10 text-white/55">
-                  {tag}
-                </span>
-              ))}
-            </div>
-          </motion.div>
         </div>
       </main>
 
