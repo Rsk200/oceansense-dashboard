@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import Globe from 'react-globe.gl';
 
 const GlobeAnimation = () => {
-  const globeEl = useRef<any>();
+  const globeEl = useRef<any>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
