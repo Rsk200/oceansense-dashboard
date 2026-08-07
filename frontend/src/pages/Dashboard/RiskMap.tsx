@@ -4,7 +4,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '../../components/ui/Ca
 import { Badge } from '../../components/ui/Badge';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import RiskMapLeaflet from '../../components/common/RiskMapLeaflet';
-import { MapPin, AlertTriangle, Droplets, TrendingUp } from 'lucide-react';
+import { AlertTriangle, Droplets, TrendingUp } from 'lucide-react';
 import { getStationName } from '../../types';
 
 const RiskMap = () => {
@@ -17,14 +17,6 @@ const RiskMap = () => {
       </div>
     );
   }
-
-  const getRiskIcon = (riskLabel: string) => {
-    switch (riskLabel) {
-      case 'RED': return AlertTriangle;
-      case 'YELLOW': return AlertTriangle;
-      default: return Droplets;
-    }
-  };
 
   return (
     <motion.div
@@ -65,7 +57,7 @@ const RiskMap = () => {
       {/* Station Details */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {floodRisk?.map((station) => {
-          const percentage = Math.min(100, Math.max(0, (station.predicted_water_level_m / station.flood_threshold_m) * 100));
+          const percentage = Math.min(100, Math.max(0, ((station.predicted_water_level_m ?? 0) / station.flood_threshold_m) * 100));
           
           const RiskIcon =
             station.risk_label === 'RED'

@@ -451,8 +451,9 @@ const LiveMonitorWidget = ({ externalSelectedMonth, onMonthSelect }: LiveMonitor
                     <rect 
                       key={i} x={(i / (wlSpark.length - 1)) * 200 - 5} y="0" width="10" height="48" fill="transparent" 
                       className="cursor-crosshair"
-                      title={`${stationForecasts[i]?.month}: ${v.toFixed(2)}m`}
-                    />
+                    >
+                      <title>{`${stationForecasts[i]?.month}: ${v.toFixed(2)}m`}</title>
+                    </rect>
                   ))}
                 </svg>
                 <div className="mt-1 flex justify-between font-mono text-[8px] text-white/20 tabular-nums">
@@ -539,8 +540,9 @@ const LiveMonitorWidget = ({ externalSelectedMonth, onMonthSelect }: LiveMonitor
                       <rect 
                         key={i} x={(i / (ensoSpark.length - 1)) * 200 - 5} y="0" width="10" height="40" fill="transparent" 
                         className="cursor-crosshair"
-                        title={`${sortedForecasts?.[i]?.month}: ${v > 0 ? '+' : ''}${v.toFixed(2)}`}
-                      />
+                      >
+                        <title>{`${sortedForecasts?.[i]?.month}: ${v > 0 ? '+' : ''}${v.toFixed(2)}`}</title>
+                      </rect>
                     );
                   })}
                 </svg>

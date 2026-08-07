@@ -29,7 +29,7 @@ const Overview = () => {
   
   const { data: floodRisk, isLoading: riskLoading } = useFloodRisk();
   const { data: alerts, isLoading: alertsLoading } = useAlerts();
-  const { data: advisories, isLoading: advisoriesLoading } = useAdvisory();
+  const { isLoading: advisoriesLoading } = useAdvisory();
   const { data: ensoData } = useEnsoPredict();
   const { isBootstrapping } = useBootstrapForecast();
 

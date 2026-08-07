@@ -1,6 +1,5 @@
 import { useMemo, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Card, CardHeader, CardTitle, CardContent } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import Button from '../../components/ui/Button';
 import { History, Calendar, Filter, Download, Trash2, Inbox } from 'lucide-react';

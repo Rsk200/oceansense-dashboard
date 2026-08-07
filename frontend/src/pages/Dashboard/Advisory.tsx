@@ -1,9 +1,9 @@
 import { motion } from 'framer-motion';
 import { useAdvisory } from '../../hooks/queries';
-import { Card, CardHeader, CardTitle, CardContent } from '../../components/ui/Card';
+import { Card, CardContent } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
-import { CheckCircle2, AlertTriangle, Info, ArrowRight, ShieldAlert, Activity, Clock, CheckCircle } from 'lucide-react';
+import { CheckCircle2, AlertTriangle, ArrowRight, ShieldAlert, Activity, Clock, CheckCircle } from 'lucide-react';
 import { getStationName } from '../../types';
 
 const Advisory = () => {
@@ -128,7 +128,6 @@ const Advisory = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {sortedAdvisories.map((advisory, index) => {
           const AdvisoryIcon = getAdvisoryIcon(advisory.risk_label);
-          const colorClass = getAdvisoryColor(advisory.risk_label);
           
           return (
             <motion.div
