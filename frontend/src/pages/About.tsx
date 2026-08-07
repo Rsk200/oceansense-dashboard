@@ -371,7 +371,6 @@ const AffiliationSection = () => {
       initial={{ opacity: 0, y: 20 }}
       animate={inView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.6 }}
-      className="relative rounded-2xl border border-white/8 overflow-hidden text-center
       className="relative rounded-2xl border border-white/8 overflow-hidden
         shadow-[0_4px_40px_rgba(0,0,0,0.5)]"
       style={{ background: 'linear-gradient(140deg, #0d2040 0%, #091629 100%)' }}
