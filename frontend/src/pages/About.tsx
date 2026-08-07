@@ -50,7 +50,7 @@ const MEMBERS: Person[] = [
     skills: ['Python', 'Machine Learning', 'Deep Learning', 'Research'],
     photo: '/team/member1.jpeg',
     linkedin: 'https://www.linkedin.com/in/rakibul-hasan20/',
-    objectPosition: '50% 15%',
+    objectPosition: 'center',
   },
   {
     name: 'Rabbi Sadnan Khan',
@@ -61,7 +61,7 @@ const MEMBERS: Person[] = [
     skills: ['React', 'TypeScript', 'FastAPI', 'Cloud'],
     photo: '/team/member2.jpg',
     linkedin: 'https://www.linkedin.com/in/rabbisadnan26/',
-    objectPosition: '50% 12%',
+    objectPosition: 'center',
   },
   {
     name: 'Faria Islam Sara',
@@ -83,7 +83,7 @@ const MEMBERS: Person[] = [
     skills: ['UI/UX Design', 'Risk Analysis', 'Figma', 'React'],
     photo: '/team/member4.jpg',
     linkedin: 'https://www.linkedin.com/in/maruf-hossain-9055b12a1/',
-    objectPosition: '50% 10%',
+    objectPosition: 'center',
   },
 ];
 
