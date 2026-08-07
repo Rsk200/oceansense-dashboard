@@ -7,6 +7,7 @@ import Navbar from './components/layout/Navbar';
 import ScrollProgress from './components/common/ScrollProgress';
 import LoadingSpinner from './components/common/LoadingSpinner';
 import Landing from './pages/Landing';
+import About from './pages/About';
 import DashboardLayout from './components/dashboard/DashboardLayout';
 
 const Overview = lazy(() => import('./pages/Dashboard/Overview'));
@@ -44,6 +45,7 @@ function App() {
             <Toast />
             <Routes>
               <Route path="/" element={<Landing />} />
+              <Route path="/about" element={<About />} />
               
               {/* Dashboard Routes */}
               <Route path="/dashboard" element={<DashboardLayout />}>

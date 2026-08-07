@@ -16,7 +16,7 @@ const Navbar = () => {
     { to: '/#pipeline', label: 'AI Pipeline', hash: 'pipeline' },
     { to: '/dashboard/overview', label: 'Dashboard', hash: '' },
     { to: '/#tech', label: 'Resources', hash: 'tech' },
-    { to: '/#research-section', label: 'About', hash: 'research-section' },
+    { to: '/about', label: 'About', hash: '' },
   ];
 
   useEffect(() => {
@@ -105,16 +105,29 @@ const Navbar = () => {
                 const isActive =
                   link.to === '/dashboard/overview'
                     ? location.pathname.startsWith('/dashboard')
+                    : link.to === '/about'
+                    ? location.pathname === '/about'
                     : location.pathname === '/' && activeSection === link.hash;
+
+                const cls = `text-xs font-semibold transition-colors duration-200 ${
+                  isActive ? 'text-accent' : 'text-white/68 hover:text-white'
+                }`;
+
+                // Pure route links (no hash) use Link, hash-scroll links use <a>
+                if (!link.hash) {
+                  return (
+                    <Link key={`${link.to}-${link.label}`} to={link.to} className={cls}>
+                      {link.label}
+                    </Link>
+                  );
+                }
 
                 return (
                   <a
                     key={`${link.to}-${link.label}`}
                     href={link.to}
                     onClick={(e) => handleHashLink(e, link.hash)}
-                    className={`text-xs font-semibold transition-colors duration-200 ${
-                      isActive ? 'text-accent' : 'text-white/68 hover:text-white'
-                    }`}
+                    className={cls}
                   >
                     {link.label}
                   </a>
