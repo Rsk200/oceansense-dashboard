@@ -345,7 +345,7 @@ const MemberCard = ({ person, index }: { person: Person; index: number }) => {
 
         {/* Bio */}
         <div className="flex-1">
-          <p className="text-slate-300 text-[13.5px] leading-[1.85] line-clamp-2" title={person.bio}>
+          <p className="text-slate-300 text-[13.5px] leading-[1.85]">
             {person.bio}
           </p>
         </div>
