@@ -66,34 +66,35 @@ const GlobeAnimation = () => {
         {dimensions.width > 0 && (
           <Globe
             ref={globeEl}
-            width={dimensions.width * 0.88} // Slightly larger globe
+            width={dimensions.width * 0.88}
             height={dimensions.width * 0.88}
-            globeImageUrl="//unpkg.com/three-globe/example/img/earth-night.jpg" // Beautiful night lights
+            // Using blue marble for a vibrant, gorgeous living planet
+            globeImageUrl="//unpkg.com/three-globe/example/img/earth-blue-marble.jpg"
             bumpImageUrl="//unpkg.com/three-globe/example/img/earth-topology.png"
             backgroundColor="rgba(0,0,0,0)"
-            atmosphereColor="#00c2ff" // Restored vibrant atmosphere
+            atmosphereColor="#00c2ff"
             atmosphereAltitude={0.15}
             showGraticules={true}
             animateIn={true}
             
-            // Highlight ENSO Origin (Fire/Warming) and Bangladesh (Flood Alert)
+            // Highlight Bangladesh ONLY (subtle warning pulse)
             ringsData={[
-              { ...PACIFIC, color: '#ff4500', maxR: 20, propagationSpeed: 1, repeatPeriod: 1200 }, // Massive slow fiery pulse
-              { ...BANGLADESH, color: '#ff0055', maxR: 8, propagationSpeed: 3, repeatPeriod: 800 }  // Fast red alert pulse
+              { ...BANGLADESH, color: '#ff0055', maxR: 4, propagationSpeed: 4, repeatPeriod: 1500 }
             ]}
             ringColor={(d: any) => d.color}
             ringMaxRadius={(d: any) => d.maxR}
             ringPropagationSpeed={(d: any) => d.propagationSpeed}
             ringRepeatPeriod={(d: any) => d.repeatPeriod}
             
-            // Fiery ENSO Data Streams (Wow Factor)
+            // Fiery ENSO Data Streams (Shooting Comets)
             arcsData={ENSO_ARCS}
             arcColor={() => ['#ff4500', '#ff0055']} // Fiery orange to red alert
-            arcDashLength={0.4}
-            arcDashGap={0.2}
-            arcDashAnimateTime={2000}
+            arcDashLength={0.3} // Short dash (comet)
+            arcDashGap={4} // Huge gap so it looks like a single packet flying
+            arcDashInitialGap={() => Math.random() * 2} // Random stagger
+            arcDashAnimateTime={2500}
             arcsTransitionDuration={0}
-            arcStroke={0.6} // Thicker, bolder arcs
+            arcStroke={0.8} // Bolder comets
           />
         )}
       </div>
