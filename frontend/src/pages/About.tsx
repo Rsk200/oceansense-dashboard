@@ -445,6 +445,8 @@ const AffiliationSection = () => {
   );
 };
 
+import ScrollWaveWrapper from '../components/layout/ScrollWaveWrapper';
+
 /* ─── Main Page ──────────────────────────────────────────── */
 const About = () => {
   const heroRef = useRef(null);
@@ -454,7 +456,8 @@ const About = () => {
     <div className="min-h-screen overflow-x-hidden" style={{ background: '#040d1c' }}>
       <Navbar />
 
-      <main className="pt-28 pb-28">
+      <ScrollWaveWrapper>
+        <main className="pt-28 pb-28">
         <div className="max-w-5xl mx-auto px-5 sm:px-6 lg:px-8">
 
           {/* ── Hero ── */}
@@ -517,6 +520,7 @@ const About = () => {
 
         </div>
       </main>
+      </ScrollWaveWrapper>
 
       <Footer />
     </div>

@@ -6,6 +6,7 @@ import { Toast } from './components/common/Toast';
 import Navbar from './components/layout/Navbar';
 import ScrollProgress from './components/common/ScrollProgress';
 import SmoothScroll from './components/layout/SmoothScroll';
+import LiquidDistortion from './components/layout/LiquidDistortion';
 import LoadingSpinner from './components/common/LoadingSpinner';
 import Landing from './pages/Landing';
 import About from './pages/About';
@@ -44,7 +45,7 @@ function App() {
             <div className="min-h-screen">
               <Navbar />
               <ScrollProgress />
-            <Toast />
+              <Toast />
             <Routes>
               <Route path="/" element={<Landing />} />
               <Route path="/about" element={<About />} />
