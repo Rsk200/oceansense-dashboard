@@ -30,14 +30,6 @@ const Advisory = () => {
     }
   };
 
-  const getAdvisoryColor = (riskLabel: string) => {
-    switch (riskLabel) {
-      case 'RED': return 'text-danger bg-danger/20 border-danger/30';
-      case 'YELLOW': return 'text-warning bg-warning/20 border-warning/30';
-      default: return 'text-success bg-success/20 border-success/30';
-    }
-  };
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
