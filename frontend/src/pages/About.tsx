@@ -274,88 +274,84 @@ const MemberCard = ({ person, index }: { person: Person; index: number }) => {
       transition={{ duration: 0.5, delay: index * 0.1, ease: 'easeOut' }}
       whileHover={{ translateY: -6 }}
       className="group relative rounded-2xl flex flex-col overflow-hidden
-        border border-white/8 hover:border-cyan-400/25
-        shadow-[0_4px_32px_rgba(0,0,0,0.5)]
-        transition-all duration-300"
-      style={{ background: 'linear-gradient(160deg, #0d1f3a 0%, #091629 100%)' }}
+        border border-white/5 hover:border-cyan-400/30
+        shadow-[0_8px_30px_rgba(0,0,0,0.6)]
+        transition-all duration-500 backdrop-blur-xl"
+      style={{ background: 'linear-gradient(135deg, rgba(13,31,60,0.85) 0%, rgba(9,19,38,0.95) 100%)' }}
     >
-      {/* Top accent line */}
-      <div className="absolute top-0 left-0 right-0 h-[2px]
-        bg-gradient-to-r from-transparent via-cyan-400 to-transparent
-        opacity-0 group-hover:opacity-80 transition-opacity duration-300" />
+      {/* Top accent line (glass reflection) */}
+      <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
 
       {/* Hover glow */}
-      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-400 pointer-events-none rounded-2xl"
-        style={{ boxShadow: 'inset 0 0 40px rgba(0,212,255,0.04)' }} />
+      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-2xl"
+        style={{ boxShadow: 'inset 0 0 40px rgba(0,212,255,0.05)', background: 'radial-gradient(circle at 50% 0%, rgba(0,212,255,0.08), transparent 70%)' }} />
 
-      <div className="relative p-7 flex flex-col gap-5 flex-1">
-
-        {/* Header */}
-        <div className="flex items-center gap-4">
-          {/* Photo */}
-          <div className="relative flex-shrink-0">
-            <div className="absolute -inset-1 rounded-full bg-cyan-400/15 blur-md
-              opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-            <div className="w-[72px] h-[72px] rounded-full overflow-hidden relative z-10
-              border-2 border-white/15 group-hover:border-cyan-400/40
-              shadow-[0_4px_20px_rgba(0,0,0,0.5)] transition-colors duration-300">
-              <img
-                src={person.photo}
-                alt={person.name}
-                className="w-full h-full object-cover"
-                style={{
-                  objectPosition: person.objectPosition ?? '50% 15%',
-                  filter: 'brightness(1.1) contrast(1.05) saturate(1.05)'
-                }}
-              />
+      <div className="relative p-7 md:p-8 flex flex-col gap-6 flex-1">
+        
+        {/* Header - Vertical Layout for Elegance */}
+        <div className="flex flex-col gap-5">
+          
+          <div className="flex justify-between items-start">
+            {/* Photo with glowing ring */}
+            <div className="relative">
+              <div className="absolute -inset-2 rounded-full bg-gradient-to-tr from-cyan-500 to-blue-500 blur-md opacity-30 group-hover:opacity-60 transition-opacity duration-500" />
+              <div className="w-[84px] h-[84px] rounded-full overflow-hidden relative z-10
+                border-2 border-white/10 group-hover:border-cyan-400/50
+                shadow-xl transition-colors duration-500 bg-[#060f22]">
+                <img
+                  src={person.photo}
+                  alt={person.name}
+                  className="w-full h-full object-cover"
+                  style={{
+                    objectPosition: person.objectPosition ?? '50% 15%',
+                    filter: 'brightness(1.1) contrast(1.05) saturate(1.05)'
+                  }}
+                />
+              </div>
             </div>
-          </div>
 
-          {/* Name + title + social */}
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 mb-1.5 flex-wrap">
-              <h3 className="text-[18px] font-bold text-white tracking-tight leading-none">
-                {person.name}
-              </h3>
-              <a
-                href={person.linkedin}
-                target="_blank" rel="noreferrer"
-                title="LinkedIn Profile"
-                className="flex-shrink-0 p-1.5 rounded-lg
-                  bg-[#0077b5]/10 border border-[#0077b5]/25 text-sky-400
-                  hover:bg-[#0077b5]/22 hover:border-[#0077b5]/45 hover:text-white
-                  transition-all duration-200"
-              >
-                <LinkedInIcon className="w-3.5 h-3.5" />
+            {/* Socials on top right */}
+            <div className="flex gap-2">
+              <a href={person.linkedin} target="_blank" rel="noreferrer" title="LinkedIn Profile"
+                className="p-2 rounded-xl bg-white/5 border border-white/10 text-slate-400 hover:text-[#0077b5] hover:border-[#0077b5]/30 hover:bg-[#0077b5]/10 transition-all duration-300">
+                <LinkedInIcon className="w-4 h-4" />
               </a>
               {person.email && (
                 <a href={`mailto:${person.email}`} title="Email"
-                  className="flex-shrink-0 p-1.5 rounded-lg bg-white/5 border border-white/10
-                    text-slate-400 hover:text-white hover:border-white/20 transition-all duration-200">
-                  <Mail className="w-3.5 h-3.5" />
+                  className="p-2 rounded-xl bg-white/5 border border-white/10 text-slate-400 hover:text-white hover:border-white/20 transition-all duration-300">
+                  <Mail className="w-4 h-4" />
                 </a>
               )}
             </div>
+          </div>
+
+          {/* Name & Titles */}
+          <div>
+            <h3 className="text-[22px] font-extrabold text-white tracking-tight mb-1 drop-shadow-sm">
+              {person.name}
+            </h3>
             
-            <p className="text-cyan-400 text-[9px] font-bold uppercase tracking-[0.15em] mb-1.5 font-mono bg-cyan-500/10 border border-cyan-500/20 inline-block px-2 py-0.5 rounded-md">
+            {/* Role - Gradient Text instead of Pill */}
+            <p className="inline-block bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-400 text-[10px] font-bold uppercase tracking-[0.2em] mb-1 font-mono">
               {person.role}
             </p>
-            <p className="text-slate-500 text-[11px]">{person.title}</p>
+            
+            <p className="text-slate-500 text-[12px] font-medium">{person.title}</p>
           </div>
         </div>
 
-        {/* Divider */}
-        <div className="h-px bg-white/6 group-hover:bg-cyan-400/12 transition-colors duration-300" />
+        {/* Divider with gradient */}
+        <div className="h-px w-full bg-gradient-to-r from-cyan-500/0 via-white/10 to-cyan-500/0" />
 
         {/* Bio */}
         <div className="flex-1">
-          <p className="text-slate-300 text-[13.5px] leading-[1.85]">
+          <p className="text-slate-300 text-[14px] leading-relaxed">
             {person.bio}
           </p>
         </div>
 
         {/* Skills */}
-        <div className="flex flex-wrap gap-2 pt-3 border-t border-white/6">
+        <div className="flex flex-wrap gap-2 pt-1">
           {person.skills.map(s => <Tag key={s} label={s} />)}
         </div>
       </div>
