@@ -1,6 +1,7 @@
 import { Suspense, lazy } from 'react';
+import { AnimatePresence } from 'framer-motion';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { ErrorBoundary } from './components/common/ErrorBoundary';
 import { Toast } from './components/common/Toast';
 import Navbar from './components/layout/Navbar';
@@ -35,6 +36,91 @@ const queryClient = new QueryClient({
   },
 });
 
+function AnimatedRoutes() {
+  const location = useLocation();
+
+  return (
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
+        <Route path="/" element={<Landing />} />
+        <Route path="/about" element={<About />} />
+        
+        {/* Dashboard Routes */}
+        <Route path="/dashboard" element={<DashboardLayout />}>
+          <Route index element={<Navigate to="/dashboard/overview" replace />} />
+          <Route
+            path="overview"
+            element={
+              <Suspense fallback={<PageFallback />}>
+                <Overview />
+              </Suspense>
+            }
+          />
+          <Route
+            path="forecast"
+            element={
+              <Suspense fallback={<PageFallback />}>
+                <EnsoForecast />
+              </Suspense>
+            }
+          />
+          <Route
+            path="water-level"
+            element={
+              <Suspense fallback={<PageFallback />}>
+                <WaterLevel />
+              </Suspense>
+            }
+          />
+          <Route
+            path="manual"
+            element={
+              <Suspense fallback={<PageFallback />}>
+                <ManualPrediction />
+              </Suspense>
+            }
+          />
+          <Route
+            path="risk-map"
+            element={
+              <Suspense fallback={<PageFallback />}>
+                <RiskMap />
+              </Suspense>
+            }
+          />
+          <Route
+            path="alerts"
+            element={
+              <Suspense fallback={<PageFallback />}>
+                <Alerts />
+              </Suspense>
+            }
+          />
+          <Route
+            path="advisory"
+            element={
+              <Suspense fallback={<PageFallback />}>
+                <Advisory />
+              </Suspense>
+            }
+          />
+          <Route
+            path="history"
+            element={
+              <Suspense fallback={<PageFallback />}>
+                <ForecastHistory />
+              </Suspense>
+            }
+          />
+        </Route>
+
+        {/* Catch all - redirect to home */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </AnimatePresence>
+  );
+}
+
 function App() {
   return (
     <ErrorBoundary>
@@ -45,84 +131,9 @@ function App() {
               <Navbar />
               <ScrollProgress />
               <Toast />
-            <Routes>
-              <Route path="/" element={<Landing />} />
-              <Route path="/about" element={<About />} />
-              
-              {/* Dashboard Routes */}
-              <Route path="/dashboard" element={<DashboardLayout />}>
-                <Route index element={<Navigate to="/dashboard/overview" replace />} />
-                <Route
-                  path="overview"
-                  element={
-                    <Suspense fallback={<PageFallback />}>
-                      <Overview />
-                    </Suspense>
-                  }
-                />
-                <Route
-                  path="enso"
-                  element={
-                    <Suspense fallback={<PageFallback />}>
-                      <EnsoForecast />
-                    </Suspense>
-                  }
-                />
-                <Route
-                  path="water-level"
-                  element={
-                    <Suspense fallback={<PageFallback />}>
-                      <WaterLevel />
-                    </Suspense>
-                  }
-                />
-                <Route
-                  path="manual"
-                  element={
-                    <Suspense fallback={<PageFallback />}>
-                      <ManualPrediction />
-                    </Suspense>
-                  }
-                />
-                <Route
-                  path="risk-map"
-                  element={
-                    <Suspense fallback={<PageFallback />}>
-                      <RiskMap />
-                    </Suspense>
-                  }
-                />
-                <Route
-                  path="alerts"
-                  element={
-                    <Suspense fallback={<PageFallback />}>
-                      <Alerts />
-                    </Suspense>
-                  }
-                />
-                <Route
-                  path="advisory"
-                  element={
-                    <Suspense fallback={<PageFallback />}>
-                      <Advisory />
-                    </Suspense>
-                  }
-                />
-                <Route
-                  path="history"
-                  element={
-                    <Suspense fallback={<PageFallback />}>
-                      <ForecastHistory />
-                    </Suspense>
-                  }
-                />
-              </Route>
-
-              {/* Catch all - redirect to home */}
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
-          </div>
-        </BrowserRouter>
+              <AnimatedRoutes />
+            </div>
+          </BrowserRouter>
         </SmoothScroll>
       </QueryClientProvider>
     </ErrorBoundary>

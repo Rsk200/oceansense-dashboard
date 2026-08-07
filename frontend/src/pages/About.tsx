@@ -445,16 +445,19 @@ const AffiliationSection = () => {
   );
 };
 
+import PageTransition from '../components/layout/PageTransition';
+
 /* ─── Main Page ──────────────────────────────────────────── */
 const About = () => {
   const heroRef = useRef(null);
   const heroInView = useInView(heroRef, { once: true });
 
   return (
-    <div className="min-h-screen overflow-x-hidden" style={{ background: '#040d1c' }}>
-      <Navbar />
+    <PageTransition>
+      <div className="min-h-screen overflow-x-hidden" style={{ background: '#040d1c' }}>
+        <Navbar />
 
-      <main className="pt-28 pb-28">
+        <main className="pt-28 pb-28">
         <div className="max-w-5xl mx-auto px-5 sm:px-6 lg:px-8">
 
           {/* ── Hero ── */}
@@ -515,11 +518,10 @@ const About = () => {
           {/* ── Affiliation ── */}
           <AffiliationSection />
 
-        </div>
-      </main>
-
-      <Footer />
-    </div>
+        </main>
+        <Footer />
+      </div>
+    </PageTransition>
   );
 };
 
