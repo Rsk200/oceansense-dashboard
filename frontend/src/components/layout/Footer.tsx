@@ -7,7 +7,7 @@ const Footer = () => {
     { label: 'Research', href: '/#research' },
     { label: 'AI Pipeline', href: '/#pipeline' },
     { label: 'Dashboard', href: '/dashboard/overview' },
-    { label: 'About Us', href: '/#research-section' },
+    { label: 'About Us', href: '/about' },
   ];
 
   const resources = ['Documentation', 'API Reference', 'Publications', 'Datasets', 'GitHub'];
