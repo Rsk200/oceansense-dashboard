@@ -79,7 +79,7 @@ const Navbar = () => {
   return (
     <>
       <motion.nav
-        className="fixed top-0 left-0 right-0 z-50 border-b backdrop-blur-2xl transition-colors duration-200"
+        className={`fixed top-0 left-0 right-0 z-50 border-b backdrop-blur-2xl transition-colors duration-200 ${isDashboard ? 'hidden' : ''}`}
         animate={{
           y: 0,
           backgroundColor: isScrolled ? 'rgba(3, 21, 47, 0.94)' : 'rgba(3, 21, 47, 0.42)',

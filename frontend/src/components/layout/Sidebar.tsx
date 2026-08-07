@@ -51,10 +51,10 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
       >
         <div className="flex flex-col h-full">
           <div className="flex items-center justify-between p-4 border-b border-white/10">
-            <div className="flex items-center space-x-2">
-              <Waves className="w-6 h-6 text-accent" />
-              <span className="text-lg font-bold text-gradient">OceanSense</span>
-            </div>
+            <Link to="/" className="flex items-center space-x-2 group">
+              <Waves className="w-6 h-6 text-accent drop-shadow-[0_0_8px_rgba(0,194,255,0.5)] transition-transform group-hover:scale-110" />
+              <span className="text-lg font-bold text-white tracking-tight group-hover:text-accent transition-colors">OceanSense</span>
+            </Link>
             <button
               onClick={onClose}
               className="md:hidden text-white/70 hover:text-white"
