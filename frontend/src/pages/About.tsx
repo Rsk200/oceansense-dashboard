@@ -390,11 +390,11 @@ const AffiliationSection = () => {
 
       <div className="relative p-12 md:p-16">
         {/* Logo */}
-        <div className="inline-flex items-center justify-center h-[90px] mb-8 rounded-xl bg-white/[0.02] border border-white/5 p-4 md:px-8 shadow-[0_0_40px_rgba(0,212,255,0.05)]">
+        <div className="inline-flex items-center justify-center h-[80px] mb-8 bg-white rounded-xl px-6 py-2 shadow-[0_0_40px_rgba(0,212,255,0.15)]">
           <img 
             src="/ulab.png" 
             alt="ULAB Logo" 
-            className="h-full w-auto object-contain"
+            className="h-full w-auto object-contain mix-blend-multiply"
           />
         </div>
 
