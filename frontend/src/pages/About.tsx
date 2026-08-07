@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import {
-  Cpu, Users, Award,
+  GraduationCap, Cpu, Users, Award,
   Waves, FlaskConical, Star, Mail
 } from 'lucide-react';
 import Navbar from '../components/layout/Navbar';
@@ -241,7 +241,7 @@ const SupervisorCard = () => {
             {/* Degree box */}
             <div className="flex items-start gap-3 mb-6 p-4 md:p-5 rounded-xl
               bg-white/[0.04] border border-white/8">
-              <img src="/ulab-logo.svg" className="w-5 h-5 opacity-80 mt-0.5" alt="ULAB" />
+              <GraduationCap className="w-5 h-5 text-cyan-400 opacity-80 flex-shrink-0 mt-0.5" />
               <p className="text-slate-300 text-sm leading-relaxed">{SUPERVISOR.degree}</p>
             </div>
 
@@ -390,12 +390,11 @@ const AffiliationSection = () => {
 
       <div className="relative p-12 md:p-16">
         {/* Logo */}
-        <div className="inline-flex items-center justify-center h-[90px] mb-8 overflow-hidden rounded-xl bg-white/[0.02] border border-white/5 p-4 md:px-8 shadow-[0_0_40px_rgba(0,212,255,0.05)]">
+        <div className="inline-flex items-center justify-center h-[90px] mb-8 rounded-xl bg-white/[0.02] border border-white/5 p-4 md:px-8 shadow-[0_0_40px_rgba(0,212,255,0.05)]">
           <img 
-            src="/ulab-logo.svg" 
+            src="/ulab.png" 
             alt="ULAB Logo" 
             className="h-full w-auto object-contain"
-            style={{ filter: 'brightness(0) invert(1) opacity(0.95)' }}
           />
         </div>
 
