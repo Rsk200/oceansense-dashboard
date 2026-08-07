@@ -14,6 +14,13 @@ const LinkedInIcon = ({ className = 'w-4 h-4' }: { className?: string }) => (
   </svg>
 );
 
+/* ─── Google Scholar SVG ─────────────────────────────────── */
+const GoogleScholarIcon = ({ className = 'w-4 h-4' }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+    <path d="M12 24a7 7 0 1 1 0-14 7 7 0 0 1 0 14zm0-24L0 9.5l4.838 3.94A8 8 0 0 1 12 9a8 8 0 0 1 7.162 4.44L24 9.5z" />
+  </svg>
+);
+
 /* ─── Types ─────────────────────────────────────────────── */
 interface Person {
   name: string;
@@ -24,6 +31,7 @@ interface Person {
   skills: string[];
   photo: string;
   linkedin: string;
+  googleScholar?: string;
   email?: string;
   objectPosition?: string;
 }
@@ -38,6 +46,7 @@ const SUPERVISOR: Person = {
   skills: ['Python', 'Deep Learning', 'NLP / BERT', 'Apache Spark', 'Data Science'],
   photo: '/team/supervisor.jpeg',
   linkedin: 'https://www.linkedin.com/in/nasir-uddin-ahmed-184469137/',
+  googleScholar: 'https://scholar.google.com/citations?user=J3T1ndsAAAAJ&hl=en',
 };
 
 const MEMBERS: Person[] = [
@@ -214,18 +223,31 @@ const SupervisorCard = () => {
               </div>
             </div>
 
-            {/* LinkedIn button */}
-            <a
-              href={SUPERVISOR.linkedin}
-              target="_blank" rel="noreferrer"
-              className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-[13px] font-semibold
-                bg-[#0077b5]/15 border border-[#0077b5]/35 text-sky-300
-                hover:bg-[#0077b5]/25 hover:border-[#0077b5]/55 hover:text-white
-                transition-all duration-200 shadow-sm"
-            >
-              <LinkedInIcon className="w-4 h-4" />
-              LinkedIn Profile
-            </a>
+            {/* Social icons */}
+            <div className="flex items-center gap-3 mt-1">
+              <a
+                href={SUPERVISOR.linkedin}
+                target="_blank" rel="noreferrer"
+                title="LinkedIn Profile"
+                className="p-2.5 rounded-xl bg-[#0077b5]/15 border border-[#0077b5]/35 text-sky-300
+                  hover:bg-[#0077b5]/25 hover:border-[#0077b5]/55 hover:text-white
+                  transition-all duration-200 shadow-sm"
+              >
+                <LinkedInIcon className="w-5 h-5" />
+              </a>
+              {SUPERVISOR.googleScholar && (
+                <a
+                  href={SUPERVISOR.googleScholar}
+                  target="_blank" rel="noreferrer"
+                  title="Google Scholar Profile"
+                  className="p-2.5 rounded-xl bg-[#4285F4]/10 border border-[#4285F4]/25 text-[#4285F4]
+                    hover:bg-[#4285F4]/20 hover:border-[#4285F4]/45 hover:text-white
+                    transition-all duration-200 shadow-sm"
+                >
+                  <GoogleScholarIcon className="w-5 h-5" />
+                </a>
+              )}
+            </div>
           </div>
 
           {/* Info column */}
