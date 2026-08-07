@@ -2,7 +2,7 @@ import { useState, useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import {
   GraduationCap, Briefcase, Code2, Globe2,
-  Linkedin, Github, Mail, ChevronDown, ChevronUp,
+  ExternalLink, GitBranch, Mail, ChevronDown, ChevronUp,
   Star, FlaskConical, Cpu, BookOpen, Users, Award
 } from 'lucide-react';
 import Navbar from '../components/layout/Navbar';
@@ -199,8 +199,9 @@ const SupervisorCard = ({ member }: { member: TeamMember }) => {
               {member.linkedin && (
                 <a href={member.linkedin} target="_blank" rel="noreferrer"
                   className="p-2 rounded-lg bg-white/5 border border-white/10 text-white/60
-                    hover:text-accent hover:border-accent/30 transition-all duration-200">
-                  <Linkedin className="w-4 h-4" />
+                    hover:text-accent hover:border-accent/30 transition-all duration-200"
+                  title="LinkedIn">
+                  <ExternalLink className="w-4 h-4" />
                 </a>
               )}
               {member.email && (
@@ -359,15 +360,17 @@ const MemberCard = ({ member, index }: { member: TeamMember; index: number }) =>
             {member.linkedin && (
               <a href={member.linkedin} target="_blank" rel="noreferrer"
                 className="p-1.5 rounded-md bg-white/5 border border-white/8 text-white/50
-                  hover:text-accent hover:border-accent/30 transition-all duration-200">
-                <Linkedin className="w-3 h-3" />
+                  hover:text-accent hover:border-accent/30 transition-all duration-200"
+                title="LinkedIn">
+                <ExternalLink className="w-3 h-3" />
               </a>
             )}
             {member.github && (
               <a href={member.github} target="_blank" rel="noreferrer"
                 className="p-1.5 rounded-md bg-white/5 border border-white/8 text-white/50
-                  hover:text-accent hover:border-accent/30 transition-all duration-200">
-                <Github className="w-3 h-3" />
+                  hover:text-accent hover:border-accent/30 transition-all duration-200"
+                title="GitHub">
+                <GitBranch className="w-3 h-3" />
               </a>
             )}
             {member.email && (
