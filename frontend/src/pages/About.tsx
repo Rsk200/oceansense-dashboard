@@ -517,8 +517,8 @@ const About = () => {
 
           {/* ── Affiliation ── */}
           <AffiliationSection />
-
-        </main>
+        </div>
+      </main>
         <Footer />
       </div>
     </PageTransition>
