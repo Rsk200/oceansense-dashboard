@@ -6,8 +6,6 @@ import AIPipeline from '../components/landing/AIPipeline';
 import TechStack from '../components/landing/TechStack';
 import Research from '../components/landing/Research';
 
-import ScrollWaveWrapper from '../components/layout/ScrollWaveWrapper';
-
 /**
  * Section order (per redesign spec):
  * 1. Hero — live station readout right-column
@@ -20,16 +18,14 @@ import ScrollWaveWrapper from '../components/layout/ScrollWaveWrapper';
 const Landing = () => {
   return (
     <div className="min-h-screen overflow-x-hidden bg-ocean-radial">
-      <ScrollWaveWrapper>
-        <main>
-          <Hero />
-          <BangladeshMap />
-          <ScienceSection />
-          <AIPipeline />
-          <TechStack />
-          <Research />
-        </main>
-      </ScrollWaveWrapper>
+      <main>
+        <Hero />
+        <BangladeshMap />
+        <ScienceSection />
+        <AIPipeline />
+        <TechStack />
+        <Research />
+      </main>
       <Footer />
     </div>
   );
