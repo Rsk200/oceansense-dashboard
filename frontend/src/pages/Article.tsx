@@ -36,23 +36,26 @@ export default function Article() {
   const [activeSection, setActiveSection] = useState('why');
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveSection(entry.target.id);
+    const handleScroll = () => {
+      const sectionElements = SECTIONS.map(s => document.getElementById(s.id));
+      let current = SECTIONS[0].id; // Default to first
+      
+      for (const el of sectionElements) {
+        if (el) {
+          // If the top of the section is above the middle of the screen (or top third)
+          const rect = el.getBoundingClientRect();
+          if (rect.top <= window.innerHeight * 0.4) {
+            current = el.id;
           }
-        });
-      },
-      { rootMargin: '-40% 0px -55% 0px', threshold: 0 }
-    );
+        }
+      }
+      setActiveSection(current);
+    };
 
-    SECTIONS.forEach((s) => {
-      const el = document.getElementById(s.id);
-      if (el) observer.observe(el);
-    });
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll(); // Init
 
-    return () => observer.disconnect();
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
