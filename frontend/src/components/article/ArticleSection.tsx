@@ -26,7 +26,7 @@ export default function ArticleSection({ id, index, title, children }: ArticleSe
         {title}
       </h2>
       
-      <div className="text-article-ivory-dim text-[16.5px] leading-relaxed max-w-[680px] space-y-5 prose prose-invert prose-p:text-article-ivory-dim prose-strong:text-article-ivory prose-a:text-article-gold prose-a:underline prose-a:decoration-article-gold/40 hover:prose-a:decoration-article-gold">
+      <div className="text-article-ivory-dim text-[16.5px] leading-relaxed max-w-[680px] space-y-4 [&>p]:mb-4 [&_strong]:text-article-ivory [&_strong]:font-semibold [&_a]:text-article-gold [&_a]:underline [&_a]:decoration-article-gold/40 hover:[&_a]:decoration-article-gold">
         {children}
       </div>
     </motion.section>
