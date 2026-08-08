@@ -3,110 +3,133 @@ import { motion } from 'framer-motion';
 const steps = [
   {
     number: '01',
-    label: 'ENSO Shift',
-    description: 'Pacific Ocean warms or cools',
+    emoji: '🌊',
+    title: 'Pacific Ocean',
+    subtitle: 'ENSO Shift',
+    detail: 'Sea surface temperature rises (El Niño) or falls (La Niña)',
     color: '#00C2FF',
-    glow: 'rgba(0, 194, 255, 0.3)',
-    icon: '🌊',
+    bg: 'rgba(0, 194, 255, 0.08)',
+    border: 'rgba(0, 194, 255, 0.25)',
   },
   {
     number: '02',
-    label: 'Wind & Pressure',
-    description: 'Atmospheric patterns shift across Asia',
+    emoji: '🌬️',
+    title: 'Atmosphere',
+    subtitle: 'Wind & Pressure',
+    detail: 'Walker Circulation weakens — jet streams shift across Asia',
     color: '#4FDBCC',
-    glow: 'rgba(79, 219, 204, 0.3)',
-    icon: '💨',
+    bg: 'rgba(79, 219, 204, 0.08)',
+    border: 'rgba(79, 219, 204, 0.25)',
   },
   {
     number: '03',
-    label: 'Rainfall',
-    description: 'Monsoon intensity changes over the Himalayas',
-    color: '#7B8FFF',
-    glow: 'rgba(123, 143, 255, 0.3)',
-    icon: '🌧️',
+    emoji: '⛈️',
+    title: 'Himalayas',
+    subtitle: 'Monsoon Rainfall',
+    detail: 'Heavy or weak rainfall fills the Brahmaputra basin',
+    color: '#A78BFA',
+    bg: 'rgba(167, 139, 250, 0.08)',
+    border: 'rgba(167, 139, 250, 0.25)',
   },
   {
     number: '04',
-    label: 'River Flood',
-    description: 'Brahmaputra rises in Bangladesh',
-    color: '#EF4444',
-    glow: 'rgba(239, 68, 68, 0.3)',
-    icon: '🏔️',
+    emoji: '🌊',
+    title: 'Bangladesh',
+    subtitle: 'River Floods',
+    detail: 'Water level crosses 22m — 18 million people at risk',
+    color: '#F87171',
+    bg: 'rgba(248, 113, 113, 0.08)',
+    border: 'rgba(248, 113, 113, 0.35)',
   },
 ];
 
 export default function AnimatedDominoes() {
   return (
-    <div className="w-full bg-[#041E42] rounded-2xl border border-white/10 shadow-2xl p-6 md:p-8 relative overflow-hidden">
-      {/* BG Glow */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_0%,rgba(0,194,255,0.08),transparent_60%)] pointer-events-none" />
+    <div className="w-full bg-[#041220] rounded-2xl border border-white/10 shadow-2xl overflow-hidden">
+      {/* Header bar */}
+      <div className="px-5 py-3 border-b border-white/10 flex items-center gap-2 bg-white/[0.02]">
+        <div className="w-2 h-2 rounded-full bg-accent animate-pulse" />
+        <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/40 font-bold">
+          Chain Reaction · 8,000 km
+        </span>
+      </div>
 
-      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/40 mb-6 font-bold">Chain Reaction</p>
-
-      <div className="flex flex-col gap-0">
+      {/* Steps */}
+      <div className="p-4 flex flex-col gap-2">
         {steps.map((step, i) => (
-          <div key={i} className="flex flex-col">
-            {/* Step Card */}
+          <div key={i}>
+            {/* Step card */}
             <motion.div
-              initial={{ opacity: 0, x: -24 }}
+              initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: '-10%' }}
-              transition={{ duration: 0.5, delay: i * 0.15, ease: [0.25, 0.46, 0.45, 0.94] }}
-              className="flex items-center gap-4 group"
+              viewport={{ once: true, margin: '-5%' }}
+              transition={{
+                duration: 0.5,
+                delay: i * 0.12,
+                ease: [0.25, 0.46, 0.45, 0.94],
+              }}
+              className="rounded-xl p-3.5 flex items-center gap-3.5 group transition-all duration-300 cursor-default"
+              style={{ background: step.bg, border: `1px solid ${step.border}` }}
             >
-              {/* Left: Number + connector */}
-              <div className="flex flex-col items-center shrink-0 w-10">
-                <motion.div
-                  initial={{ scale: 0 }}
-                  whileInView={{ scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ type: 'spring', stiffness: 200, damping: 15, delay: i * 0.15 + 0.1 }}
-                  className="w-10 h-10 rounded-full flex items-center justify-center font-mono text-xs font-bold border-2 transition-all duration-300 group-hover:scale-110 shrink-0"
-                  style={{
-                    borderColor: step.color,
-                    color: step.color,
-                    boxShadow: `0 0 16px ${step.glow}`,
-                    backgroundColor: `${step.glow}`,
-                  }}
-                >
-                  {step.number}
-                </motion.div>
-              </div>
-
-              {/* Right: Card */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: i * 0.15 + 0.2 }}
-                className="flex-1 rounded-xl px-4 py-3 border transition-all duration-300 group-hover:scale-[1.02]"
+              {/* Number badge */}
+              <div
+                className="w-9 h-9 rounded-lg flex items-center justify-center font-mono text-xs font-bold shrink-0 transition-transform duration-300 group-hover:scale-110"
                 style={{
-                  background: `linear-gradient(135deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 100%)`,
-                  borderColor: `${step.color}30`,
+                  color: step.color,
+                  background: `${step.color}15`,
+                  border: `1px solid ${step.color}40`,
+                  boxShadow: `0 0 12px ${step.color}25`,
                 }}
               >
-                <div className="flex items-center gap-3">
-                  <span className="text-xl">{step.icon}</span>
-                  <div>
-                    <div className="font-bold text-sm text-white leading-none mb-1">{step.label}</div>
-                    <div className="text-xs text-white/50 leading-snug">{step.description}</div>
-                  </div>
+                {step.number}
+              </div>
+
+              {/* Emoji */}
+              <div className="text-2xl shrink-0">{step.emoji}</div>
+
+              {/* Text */}
+              <div className="min-w-0 flex-1">
+                <div className="flex items-baseline gap-2 flex-wrap">
+                  <span
+                    className="font-bold text-sm leading-none"
+                    style={{ color: step.color }}
+                  >
+                    {step.subtitle}
+                  </span>
+                  <span className="text-white/30 text-[10px] font-mono uppercase tracking-wider">
+                    {step.title}
+                  </span>
                 </div>
-              </motion.div>
+                <p className="text-[11px] text-white/55 mt-1 leading-snug">{step.detail}</p>
+              </div>
             </motion.div>
 
-            {/* Connector Arrow */}
+            {/* Animated Arrow Connector */}
             {i < steps.length - 1 && (
               <motion.div
                 initial={{ opacity: 0, scaleY: 0 }}
                 whileInView={{ opacity: 1, scaleY: 1 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.3, delay: i * 0.15 + 0.35 }}
-                className="flex flex-col items-center origin-top ml-5 py-1"
+                transition={{ duration: 0.3, delay: i * 0.12 + 0.3, ease: 'easeOut' }}
+                className="origin-top flex flex-col items-center py-0.5 ml-[1.375rem]"
               >
-                <div className="w-px h-5 bg-gradient-to-b from-white/20 to-white/5" />
-                <svg width="10" height="6" viewBox="0 0 10 6" className="opacity-40">
-                  <path d="M0 0 L5 6 L10 0" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                {/* Vertical line */}
+                <div
+                  className="w-px h-5"
+                  style={{
+                    background: `linear-gradient(to bottom, ${steps[i].color}60, ${steps[i + 1].color}40)`,
+                  }}
+                />
+                {/* Arrowhead */}
+                <svg width="8" height="5" viewBox="0 0 8 5" fill="none">
+                  <path
+                    d="M0 0 L4 5 L8 0"
+                    stroke={steps[i + 1].color}
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    opacity="0.6"
+                  />
                 </svg>
               </motion.div>
             )}
@@ -114,10 +137,15 @@ export default function AnimatedDominoes() {
         ))}
       </div>
 
-      {/* Bottom tag */}
-      <div className="mt-6 pt-5 border-t border-white/5 flex items-center gap-2">
-        <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
-        <span className="font-mono text-[10px] text-white/30 uppercase tracking-widest">8,000 km connection</span>
+      {/* Footer */}
+      <div className="px-5 py-3 border-t border-white/10 bg-white/[0.02] flex items-center justify-between">
+        <span className="font-mono text-[9px] text-white/25 uppercase tracking-wider">
+          Source: Mohsin et al., 2025
+        </span>
+        <div className="flex items-center gap-1.5">
+          <span className="text-[9px] text-white/30 font-mono uppercase tracking-wider">Lead time</span>
+          <span className="text-xs font-bold text-accent font-mono">12 months</span>
+        </div>
       </div>
     </div>
   );
