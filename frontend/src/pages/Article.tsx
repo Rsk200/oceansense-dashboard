@@ -168,8 +168,6 @@ export default function Article() {
           <ArticleImage src="/article/4.png" alt="Map of Bangladesh river stations" />
         </ArticleSection>
 
-        {/* ... More sections to be continued in next tool call ... */}
-        
         <ArticleSection id="pipeline" index="07 — From Raw Numbers to Model-Ready Data" title="What actually happens to the data before the AI ever sees it?">
           <p>The raw numbers go through a rigorous pipeline. Time-series are aligned, variables are normalized, and <strong>Principal Component Analysis (PCA)</strong> is used to reduce the massive dimensionality of global climate maps down to just the critical patterns. For the river models, a crucial <strong>rainfall anomaly</strong> feature is calculated to give the model a clear signal of "wetter than usual" or "drier than usual" months.</p>
           <div className="bg-article-panel border border-article-panel-line border-l-[3px] border-l-article-teal rounded-[10px] p-[18px_20px] my-[22px] text-[15px] text-article-ivory-dim">
@@ -178,10 +176,20 @@ export default function Article() {
             </div>
             <p className="mt-2.5 text-center text-[13.5px]">This simple formula acts as a powerful amplifier for extreme weather signals.</p>
           </div>
+          <p className="font-mono text-[12.5px] text-article-ivory-dim">Note: one small technical detail — feature scaling was skipped for XGBoost on purpose, since tree-based models don't care whether a number is "5" or "5,000"; they only care about the order <a href="#ref-shen">(Shen, 2018)</a>.</p>
+        </ArticleSection>
+
+        <ArticleSection id="learn" index="08 — Inside the Machine" title="How does the AI actually learn to read the ocean and the rivers?">
+          <p>The team didn't just pick one AI method and hope for the best — they put five different "AI brains" through a head-to-head competition for ocean prediction, and ran a similar contest for river prediction. The clear winner, and the one worth actually understanding, was <strong>XGBoost</strong>.</p>
+          <p><strong>XGBoost.</strong> Picture hundreds of tiny decision-makers, each one asking one simple question, like "was the temperature above 27°C?" Every decision-maker votes, and all the votes are combined into one final answer. It's especially strong at reading data that's already organized into neat rows and columns, like a spreadsheet <a href="#ref-chen">(T. Chen &amp; Guestrin, 2016)</a>.</p>
+          <div className="bg-article-panel border border-article-panel-line border-l-[3px] border-l-article-teal rounded-[10px] p-[18px_20px] my-[22px] text-[15px] text-article-ivory-dim">
+            <strong>Every model was graded on the same three-question report card:</strong> <span className="font-mono">MAE</span> (on average, how far off was each guess — like a golf score, lower is better), <span className="font-mono">RMSE</span> (a second error score that punishes a really big miss extra hard — also lower is better), and <span className="font-mono">R²</span> (out of the whole real-world pattern, how much did the model actually explain — like a percentage, higher is better. 1.0 is a perfect score, 0 is no better than always guessing the average, and a negative number means it did worse than that).
+          </div>
         </ArticleSection>
 
         <ArticleSection id="results" index="09 — The Scorecard" title="Which model actually won — and why did some fail so badly?">
-          <p>For predicting the ocean's ENSO state, one model pulled far ahead of the rest: <strong>XGBoost won clearly</strong>, correctly explaining over 90% of what actually happened in the real world.</p>
+          <p>Quick reminder before the numbers: for the first two columns (MAE, RMSE), a <strong>smaller</strong> number is better, like a golf score. For the last column (R²), a <strong>bigger</strong> number is better, like a percentage — 1.0 is a perfect 100%.</p>
+          <p>For predicting the ocean's ENSO state, one model pulled far ahead of the rest: <strong>XGBoost won clearly</strong>, correctly explaining over 90% of what actually happened in the real world — like a student scoring 90 on a test where everyone else is stuck around 50 or lower:</p>
           <div className="overflow-x-auto my-6">
             <table className="w-full border-collapse text-[14.5px]">
               <thead>
@@ -205,24 +213,224 @@ export default function Article() {
                   <td className="text-left py-2.5 px-3 border-b border-article-panel-line font-mono">0.972</td>
                   <td className="text-left py-2.5 px-3 border-b border-article-panel-line font-mono">0.486</td>
                 </tr>
+                <tr>
+                  <td className="text-left py-2.5 px-3 border-b border-article-panel-line">CTEFNet</td>
+                  <td className="text-left py-2.5 px-3 border-b border-article-panel-line font-mono">0.792</td>
+                  <td className="text-left py-2.5 px-3 border-b border-article-panel-line font-mono">1.029</td>
+                  <td className="text-left py-2.5 px-3 border-b border-article-panel-line font-mono">0.447</td>
+                </tr>
+                <tr>
+                  <td className="text-left py-2.5 px-3 border-b border-article-panel-line">LSTM</td>
+                  <td className="text-left py-2.5 px-3 border-b border-article-panel-line font-mono">0.723</td>
+                  <td className="text-left py-2.5 px-3 border-b border-article-panel-line font-mono">0.939</td>
+                  <td className="text-left py-2.5 px-3 border-b border-article-panel-line font-mono">-0.262</td>
+                </tr>
+                <tr>
+                  <td className="text-left py-2.5 px-3 border-b border-article-panel-line">ConvLSTM</td>
+                  <td className="text-left py-2.5 px-3 border-b border-article-panel-line font-mono">4.750</td>
+                  <td className="text-left py-2.5 px-3 border-b border-article-panel-line font-mono">6.341</td>
+                  <td className="text-left py-2.5 px-3 border-b border-article-panel-line font-mono">0.009</td>
+                </tr>
               </tbody>
             </table>
           </div>
-          <p>For local river water levels, the best result came from combining two strengths instead of picking just one: a <strong>hybrid XGBoost–LSTM model</strong>, pairing XGBoost's talent for spotting tricky relationships with LSTM's talent for remembering seasonal rhythm, reached <strong>R² up to 0.923</strong> at the best-performing station.</p>
+          <p>To put a real number on it: an RMSE of <strong>0.486</strong> here means XGBoost's guesses for the Niño 3.4 index were typically off by less than half a degree Celsius — a tiny margin for something this hard to predict months out.</p>
+          <p>The standalone LSTM actually scored <em>below zero</em> — meaning it did worse than a lazy forecaster who just guesses "the average" every single time. The reason is fairly intuitive: ENSO is fundamentally about the whole ocean's shape and geography, and a model with no built-in sense of "where" struggles to represent that <a href="#ref-ham">(Ham et al., 2019)</a>.</p>
+          <p>For local <strong>river water levels</strong>, the story flipped a little: <strong>LSTM and XGBoost</strong> both did well here too (R² reaching <strong>0.905</strong> and <strong>0.881</strong> respectively across stations), while the <strong>Graph Neural Networks mostly failed</strong>, scoring below zero. The likely reason is simple: GNNs need a big, richly connected network to learn anything useful, and three stations is a bit like trying to understand a whole city's traffic from just three intersections <a href="#ref-jafarzadegan">(Jafarzadegan et al., 2023)</a>.</p>
+          <p>The best result of the entire study came from combining two strengths instead of picking just one: a <strong>hybrid XGBoost–LSTM model</strong>, pairing XGBoost's talent for spotting tricky relationships with LSTM's talent for remembering seasonal rhythm, reached <strong>R² up to 0.923</strong> at the best-performing station — the lowest error of any model tested <a href="#ref-chen">(T. Chen &amp; Guestrin, 2016)</a>.</p>
+          <div className="bg-article-panel border border-article-panel-line border-l-[3px] border-l-article-danger rounded-[10px] p-[18px_20px] my-[22px] text-[15px] text-article-ivory-dim">
+            <strong className="text-article-ivory">Not every station behaved the same way.</strong> One station consistently scored lower (R² around 0.66) than the other two — a reminder that even the best model is only ever as reliable as the data feeding it, the same way even a great cook can't save a dish made with bad ingredients.
+          </div>
+        </ArticleSection>
+
+        <ArticleSection id="forecast" index="10 — Looking Ahead" title="What does OceanSense actually predict is coming in 2026?">
+          <p>Running the whole pipeline forward, like a weather forecast for the year ahead, the model projects <strong>neutral ENSO conditions</strong> through the coming year — the Niño 3.4 index is expected to stay within the normal, calm range of −0.5 to +0.5. In plain terms: no strong El Niño or La Niña is expected to stir up extreme weather.</p>
+          <p>Following that signal all the way downstream, the pipeline forecasts that water levels at Kurigram, Gaibandha, and Jamalpur will <strong>stay below the 22-metre danger line throughout 2026</strong>, following the usual seasonal shape: a gentle rise from January to May, a peak during the core monsoon months of June to September, and a gradual fall back down from October to December — matching the well-known seasonal rhythm of the Brahmaputra–Jamuna basin <a href="#ref-hossain">(Hossain et al., 2019)</a>.</p>
+          <p>In short: <strong>moderate flood risk, no extreme flooding expected</strong> — but with one honest caveat. This forecast is only as good as the ENSO projection it starts from, the same way a delivery time estimate is only as good as the traffic report it's based on. If real-world ENSO behaves differently than assumed, that error travels straight down the chain into the rainfall and river-level forecasts.</p>
         </ArticleSection>
         
         <ArticleSection id="matters" index="11 — The Human Payoff" title="Why does having twelve months of notice actually matter to real people?">
-          <p>A week's warning lets you move your furniture to higher ground. A year's warning lets you change your decisions before they're locked in: choosing a flood-resistant seed variety before planting season instead of after the crop is already in the ground, reinforcing an embankment while it's still dry season, planning an evacuation route ahead of time, or moving community resources into place before a crisis hits.</p>
+          <p>A week's warning lets you move your furniture to higher ground. A year's warning lets you change your decisions before they're locked in: choosing a flood-resistant seed variety before planting season instead of after the crop is already in the ground, reinforcing an embankment while it's still dry season, planning an evacuation route ahead of time, or moving community resources into place before a crisis hits — instead of scrambling after.</p>
+          <p>The stakes here are not abstract. Field surveys of Bangladesh's riverine char (river-island) communities have found flood and erosion events causing crop damage above 90% in affected areas, with erosion itself acting as a major long-term driver of displacement <a href="#ref-islam">(Islam, 2017)</a>. Extra lead time is one of the few real levers that can meaningfully shrink that damage before it ever happens.</p>
+          <p>At a policy level, this work is a direct contribution to <strong>UN Sustainable Development Goal 13 (Climate Action)</strong>, and indirectly supports <strong>SDG 11 (Sustainable Cities and Communities)</strong> by helping vulnerable riverine communities plan rather than react.</p>
         </ArticleSection>
 
-        {/* Footer / Glossary simplified for length */}
-        <footer className="pt-[60px] pb-[90px] border-t border-article-panel-line mt-12">
-          <div className="bg-article-panel border border-article-panel-line rounded-[14px] p-8 mb-12">
-            <h3 className="font-article font-semibold text-lg text-article-ivory mb-2">About this research</h3>
-            <p className="text-sm text-article-ivory-dim leading-relaxed">
-              OceanSense: An AI-Powered ENSO Early Disaster Warning System is a CSE 4098B capstone project at the University of Liberal Arts Bangladesh (ULAB), Spring 2026, by <strong>Faria Islam Sara, Md Maruf Hossain, Rabbi Sadnan Khan,</strong> and <strong>Rakibul Hasan</strong>, under the supervision of <strong>Nasir Uddin Ahmed</strong>.
-            </p>
+        <ArticleSection id="limits" index="12 — Being Honest" title="What can't OceanSense do — at least, not yet?">
+          <p>No forecasting system is a crystal ball, and the team is upfront about exactly where this one still has rough edges.</p>
+          <p>
+            <span className="inline-block px-3 py-1 rounded-full text-xs font-mono mr-2 mb-2 border border-article-panel-line text-article-ivory-dim bg-article-navy-light">Depends on the ENSO input</span> If the starting ocean forecast is wrong, every prediction built on top of it inherits that mistake — like a house built on a shaky foundation. <br/><br/>
+            <span className="inline-block px-3 py-1 rounded-full text-xs font-mono mr-2 mb-2 border border-article-panel-line text-article-ivory-dim bg-article-navy-light">Only 3 stations</span> Kurigram, Gaibandha, and Jamalpur represent the wider basin well, but they aren't the whole country. <br/><br/>
+            <span className="inline-block px-3 py-1 rounded-full text-xs font-mono mr-2 mb-2 border border-article-panel-line text-article-ivory-dim bg-article-navy-light">No river physics</span> This is a pattern-recognition system, not a physical simulation of how water actually flows and moves through the land, which can make it less reliable during rare, extreme events <a href="#ref-jafarzadegan">(Jafarzadegan et al., 2023)</a>. <br/><br/>
+            <span className="inline-block px-3 py-1 rounded-full text-xs font-mono mr-2 mb-2 border border-article-panel-line text-article-ivory-dim bg-article-navy-light">Data gaps</span> Public records sometimes have missing or messy stretches, and gaps like that can quietly bias what the model learns.
+          </p>
+        </ArticleSection>
+
+        <ArticleSection id="next" index="13 — Where This Goes Next" title="What's the plan for turning this from a research prototype into something people actually use?">
+          <p>Turning this from a research project into something a real community can use is planned in three steps, like building a house floor by floor. <strong>Phase 1</strong> is a web dashboard showing ENSO, rainfall, and water-level forecasts, with the flood threshold drawn right on the chart so anyone can see at a glance whether the line is close to being crossed. <strong>Phase 2</strong> is a mobile app, built with Flutter, that works even offline and sends real-time flood alerts straight to someone's phone. <strong>Phase 3</strong> connects everything to live data feeds from NOAA, NASA, and BWDB so the whole pipeline updates itself automatically — turning it into a genuine <strong>Decision Support System</strong> that disaster management authorities can actually rely on.</p>
+          <p>The team estimated a full project budget of around <strong>৳725,000</strong> for a four-person team over a year — including computing hardware, cloud costs, data access, and an SMS alert gateway for community dissemination.</p>
+        </ArticleSection>
+
+        <ArticleSection id="stack" index="14 — Under the Hood" title="What was OceanSense actually built with?">
+          <p>None of this is exotic, secret technology. It's a careful combination of well-known, mostly free and open-source tools — the same kind of building blocks used across the AI and data science world — chosen because they're reliable, not because they're trendy.</p>
+          
+          <div className="mt-5 mb-2">
+            <h4 className="font-mono text-[11.5px] uppercase tracking-widest text-article-teal mb-2.5 font-medium">Languages</h4>
+            <span className="inline-block px-3 py-1 rounded-full text-xs font-mono mr-2 mb-2 border border-article-panel-line text-article-ivory bg-article-navy-light">Python</span>
+            <span className="inline-block px-3 py-1 rounded-full text-xs font-mono mr-2 mb-2 border border-article-panel-line text-article-ivory bg-article-navy-light">JavaScript (React.js)</span>
+            <span className="inline-block px-3 py-1 rounded-full text-xs font-mono mr-2 mb-2 border border-article-panel-line text-article-ivory bg-article-navy-light">SQL</span>
           </div>
+          
+          <div className="mt-5 mb-2">
+            <h4 className="font-mono text-[11.5px] uppercase tracking-widest text-article-teal mb-2.5 font-medium">Machine Learning & Deep Learning</h4>
+            <span className="inline-block px-3 py-1 rounded-full text-xs font-mono mr-2 mb-2 border border-article-panel-line text-article-ivory bg-article-navy-light">XGBoost</span>
+            <span className="inline-block px-3 py-1 rounded-full text-xs font-mono mr-2 mb-2 border border-article-panel-line text-article-ivory bg-article-navy-light">PyTorch</span>
+            <span className="inline-block px-3 py-1 rounded-full text-xs font-mono mr-2 mb-2 border border-article-panel-line text-article-ivory bg-article-navy-light">TensorFlow / Keras</span>
+            <span className="inline-block px-3 py-1 rounded-full text-xs font-mono mr-2 mb-2 border border-article-panel-line text-article-ivory bg-article-navy-light">PyTorch Geometric (GNNs)</span>
+            <span className="inline-block px-3 py-1 rounded-full text-xs font-mono mr-2 mb-2 border border-article-panel-line text-article-ivory bg-article-navy-light">scikit-learn</span>
+          </div>
+
+          <div className="mt-5 mb-2">
+            <h4 className="font-mono text-[11.5px] uppercase tracking-widest text-article-teal mb-2.5 font-medium">Geospatial & Scientific Data Processing</h4>
+            <span className="inline-block px-3 py-1 rounded-full text-xs font-mono mr-2 mb-2 border border-article-panel-line text-article-ivory bg-article-navy-light">Xarray</span>
+            <span className="inline-block px-3 py-1 rounded-full text-xs font-mono mr-2 mb-2 border border-article-panel-line text-article-ivory bg-article-navy-light">NetCDF4</span>
+            <span className="inline-block px-3 py-1 rounded-full text-xs font-mono mr-2 mb-2 border border-article-panel-line text-article-ivory bg-article-navy-light">Pandas</span>
+            <span className="inline-block px-3 py-1 rounded-full text-xs font-mono mr-2 mb-2 border border-article-panel-line text-article-ivory bg-article-navy-light">NumPy</span>
+            <span className="inline-block px-3 py-1 rounded-full text-xs font-mono mr-2 mb-2 border border-article-panel-line text-article-ivory bg-article-navy-light">GeoPandas</span>
+            <span className="inline-block px-3 py-1 rounded-full text-xs font-mono mr-2 mb-2 border border-article-panel-line text-article-ivory bg-article-navy-light">Shapely</span>
+          </div>
+
+          <div className="mt-5 mb-2">
+            <h4 className="font-mono text-[11.5px] uppercase tracking-widest text-article-teal mb-2.5 font-medium">APIs & Data Providers</h4>
+            <span className="inline-block px-3 py-1 rounded-full text-xs font-mono mr-2 mb-2 border border-article-panel-line text-article-ivory bg-article-navy-light">Copernicus CDS API</span>
+            <span className="inline-block px-3 py-1 rounded-full text-xs font-mono mr-2 mb-2 border border-article-panel-line text-article-ivory bg-article-navy-light">NOAA PSL API</span>
+            <span className="inline-block px-3 py-1 rounded-full text-xs font-mono mr-2 mb-2 border border-article-panel-line text-article-ivory bg-article-navy-light">Google Earth Engine</span>
+            <span className="inline-block px-3 py-1 rounded-full text-xs font-mono mr-2 mb-2 border border-article-panel-line text-article-ivory bg-article-navy-light">BWDB</span>
+          </div>
+
+          <div className="mt-5 mb-2">
+            <h4 className="font-mono text-[11.5px] uppercase tracking-widest text-article-teal mb-2.5 font-medium">Visualization</h4>
+            <span className="inline-block px-3 py-1 rounded-full text-xs font-mono mr-2 mb-2 border border-article-panel-line text-article-ivory bg-article-navy-light">Leaflet.js / Mapbox GL JS</span>
+            <span className="inline-block px-3 py-1 rounded-full text-xs font-mono mr-2 mb-2 border border-article-panel-line text-article-ivory bg-article-navy-light">Matplotlib</span>
+            <span className="inline-block px-3 py-1 rounded-full text-xs font-mono mr-2 mb-2 border border-article-panel-line text-article-ivory bg-article-navy-light">Seaborn</span>
+          </div>
+
+          <div className="mt-5 mb-2">
+            <h4 className="font-mono text-[11.5px] uppercase tracking-widest text-article-teal mb-2.5 font-medium">Infrastructure & Deployment</h4>
+            <span className="inline-block px-3 py-1 rounded-full text-xs font-mono mr-2 mb-2 border border-article-panel-line text-article-ivory bg-article-navy-light">PostgreSQL + PostGIS</span>
+            <span className="inline-block px-3 py-1 rounded-full text-xs font-mono mr-2 mb-2 border border-article-panel-line text-article-ivory bg-article-navy-light">AWS S3 / Google Cloud Storage</span>
+            <span className="inline-block px-3 py-1 rounded-full text-xs font-mono mr-2 mb-2 border border-article-panel-line text-article-ivory bg-article-navy-light">Docker</span>
+            <span className="inline-block px-3 py-1 rounded-full text-xs font-mono mr-2 mb-2 border border-article-panel-line text-article-ivory bg-article-navy-light">FastAPI / Flask</span>
+            <span className="inline-block px-3 py-1 rounded-full text-xs font-mono mr-2 mb-2 border border-article-panel-line text-article-ivory bg-article-navy-light">Twilio SMS Gateway</span>
+          </div>
+
+          <div className="mt-5 mb-2">
+            <h4 className="font-mono text-[11.5px] uppercase tracking-widest text-article-teal mb-2.5 font-medium">Collaboration & Tracking</h4>
+            <span className="inline-block px-3 py-1 rounded-full text-xs font-mono mr-2 mb-2 border border-article-panel-line text-article-ivory bg-article-navy-light">GitHub</span>
+            <span className="inline-block px-3 py-1 rounded-full text-xs font-mono mr-2 mb-2 border border-article-panel-line text-article-ivory bg-article-navy-light">MLflow</span>
+            <span className="inline-block px-3 py-1 rounded-full text-xs font-mono mr-2 mb-2 border border-article-panel-line text-article-ivory bg-article-navy-light">Google Colab Pro</span>
+            <span className="inline-block px-3 py-1 rounded-full text-xs font-mono mr-2 mb-2 border border-article-panel-line text-article-ivory bg-article-navy-light">Overleaf</span>
+          </div>
+        </ArticleSection>
+
+        <ArticleSection id="glossary" index="15 — Key Terms, Explained Simply" title="What do all these technical words actually mean?">
+          <p>A short, plain-English glossary for anyone who wants to skim the jargon without losing the meaning — like a cheat sheet you can keep next to the article.</p>
+          <dl className="mt-2">
+            <div className="border-b border-article-panel-line py-4 grid grid-cols-1 sm:grid-cols-[200px_1fr] gap-2 sm:gap-[18px] last:border-b-0">
+              <dt className="font-mono text-[13.5px] text-article-gold font-semibold">ENSO</dt>
+              <dd className="m-0 text-article-ivory-dim text-[15px]">The El Niño–Southern Oscillation — the natural warming/cooling cycle of the tropical Pacific Ocean that reshapes weather worldwide.</dd>
+            </div>
+            <div className="border-b border-article-panel-line py-4 grid grid-cols-1 sm:grid-cols-[200px_1fr] gap-2 sm:gap-[18px] last:border-b-0">
+              <dt className="font-mono text-[13.5px] text-article-gold font-semibold">Niño 3.4 Index</dt>
+              <dd className="m-0 text-article-ivory-dim text-[15px]">The single number scientists use to officially track whether the Pacific is in an El Niño, La Niña, or neutral state.</dd>
+            </div>
+            <div className="border-b border-article-panel-line py-4 grid grid-cols-1 sm:grid-cols-[200px_1fr] gap-2 sm:gap-[18px] last:border-b-0">
+              <dt className="font-mono text-[13.5px] text-article-gold font-semibold">Teleconnection</dt>
+              <dd className="m-0 text-article-ivory-dim text-[15px]">A statistical link between weather in one part of the world and weather thousands of kilometres away — like the Pacific and the Bangladesh monsoon.</dd>
+            </div>
+            <div className="border-b border-article-panel-line py-4 grid grid-cols-1 sm:grid-cols-[200px_1fr] gap-2 sm:gap-[18px] last:border-b-0">
+              <dt className="font-mono text-[13.5px] text-article-gold font-semibold">Spring Predictability Barrier</dt>
+              <dd className="m-0 text-article-ivory-dim text-[15px]">A well-known seasonal blind spot where ENSO forecasts made in spring become far less reliable than forecasts made at other times of year.</dd>
+            </div>
+            <div className="border-b border-article-panel-line py-4 grid grid-cols-1 sm:grid-cols-[200px_1fr] gap-2 sm:gap-[18px] last:border-b-0">
+              <dt className="font-mono text-[13.5px] text-article-gold font-semibold">Lead Time</dt>
+              <dd className="m-0 text-article-ivory-dim text-[15px]">How far in advance a forecast is made — the whole point of OceanSense is stretching this from days to months.</dd>
+            </div>
+            <div className="border-b border-article-panel-line py-4 grid grid-cols-1 sm:grid-cols-[200px_1fr] gap-2 sm:gap-[18px] last:border-b-0">
+              <dt className="font-mono text-[13.5px] text-article-gold font-semibold">XGBoost</dt>
+              <dd className="m-0 text-article-ivory-dim text-[15px]">A machine learning method that builds many small decision trees and combines them, especially strong on structured, table-shaped data.</dd>
+            </div>
+            <div className="border-b border-article-panel-line py-4 grid grid-cols-1 sm:grid-cols-[200px_1fr] gap-2 sm:gap-[18px] last:border-b-0">
+              <dt className="font-mono text-[13.5px] text-article-gold font-semibold">LSTM</dt>
+              <dd className="m-0 text-article-ivory-dim text-[15px]">A type of neural network with a built-in "memory," designed to understand patterns that unfold over a sequence of time.</dd>
+            </div>
+            <div className="border-b border-article-panel-line py-4 grid grid-cols-1 sm:grid-cols-[200px_1fr] gap-2 sm:gap-[18px] last:border-b-0">
+              <dt className="font-mono text-[13.5px] text-article-gold font-semibold">Attention Mechanism</dt>
+              <dd className="m-0 text-article-ivory-dim text-[15px]">A technique that lets a model automatically weigh which past time steps matter most, instead of treating every month equally.</dd>
+            </div>
+            <div className="border-b border-article-panel-line py-4 grid grid-cols-1 sm:grid-cols-[200px_1fr] gap-2 sm:gap-[18px] last:border-b-0">
+              <dt className="font-mono text-[13.5px] text-article-gold font-semibold">GNN</dt>
+              <dd className="m-0 text-article-ivory-dim text-[15px]">Graph Neural Network — a model designed to learn from how points (like river stations) are connected to each other, similar to a road map.</dd>
+            </div>
+            <div className="border-b border-article-panel-line py-4 grid grid-cols-1 sm:grid-cols-[200px_1fr] gap-2 sm:gap-[18px] last:border-b-0">
+              <dt className="font-mono text-[13.5px] text-article-gold font-semibold">PCA</dt>
+              <dd className="m-0 text-article-ivory-dim text-[15px]">Principal Component Analysis — a way of compressing large, complex data down to its most important patterns, discarding redundant noise.</dd>
+            </div>
+            <div className="border-b border-article-panel-line py-4 grid grid-cols-1 sm:grid-cols-[200px_1fr] gap-2 sm:gap-[18px] last:border-b-0">
+              <dt className="font-mono text-[13.5px] text-article-gold font-semibold">R² (R-squared)</dt>
+              <dd className="m-0 text-article-ivory-dim text-[15px]">A score from roughly 0 to 1 showing how much of the real-world pattern a model actually explains. 1.0 is perfect; 0 is no better than guessing the average; negative is worse than that.</dd>
+            </div>
+            <div className="border-b border-article-panel-line py-4 grid grid-cols-1 sm:grid-cols-[200px_1fr] gap-2 sm:gap-[18px] last:border-b-0">
+              <dt className="font-mono text-[13.5px] text-article-gold font-semibold">RMSE / MAE</dt>
+              <dd className="m-0 text-article-ivory-dim text-[15px]">Two ways of measuring average prediction error — RMSE punishes big mistakes more harshly, MAE treats every error equally.</dd>
+            </div>
+            <div className="border-b border-article-panel-line py-4 grid grid-cols-1 sm:grid-cols-[200px_1fr] gap-2 sm:gap-[18px] last:border-b-0">
+              <dt className="font-mono text-[13.5px] text-article-gold font-semibold">BWDB</dt>
+              <dd className="m-0 text-article-ivory-dim text-[15px]">The Bangladesh Water Development Board — the government body that sets official river danger levels, including the 22m flood threshold used throughout this project.</dd>
+            </div>
+          </dl>
+        </ArticleSection>
+
+        {/* Footer */}
+        <footer className="pt-[60px] pb-[90px] border-t border-article-panel-line mt-12" id="refs">
+          <div className="bg-article-panel border border-article-panel-line rounded-[14px] p-8 mb-12">
+            <h3 className="font-article font-semibold text-[18px] text-article-ivory mb-2 mt-0">About this research</h3>
+            <p className="text-[14px] text-article-ivory-dim leading-relaxed">
+              OceanSense: An AI-Powered ENSO Early Disaster Warning System is a CSE 4098B capstone project at the University of Liberal Arts Bangladesh (ULAB), Spring 2026, by <strong>Faria Islam Sara, Md Maruf Hossain, Rabbi Sadnan Khan,</strong> and <strong>Rakibul Hasan</strong>, under the supervision of <strong>Nasir Uddin Ahmed</strong>. This article is a plain-language companion to the full capstone report and is not a substitute for it.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 sm:gap-0 mt-[18px] border-t border-article-panel-line pt-4">
+              <div className="flex-1 pr-3.5 text-[12.5px] text-article-ivory-dim">
+                <span className="font-mono text-[11px] text-article-teal uppercase tracking-widest block mb-1">Fall '25</span>
+                Domain selection, problem framing, and the first pass of literature review.
+              </div>
+              <div className="flex-1 pr-3.5 text-[12.5px] text-article-ivory-dim border-t sm:border-t-0 sm:border-l border-article-panel-line pt-4 sm:pt-0 sm:pl-3.5 mt-4 sm:mt-0">
+                <span className="font-mono text-[11px] text-article-teal uppercase tracking-widest block mb-1">Spring '26</span>
+                Dataset collection, methodology design, model selection, and prototype development.
+              </div>
+              <div className="flex-1 pr-3.5 text-[12.5px] text-article-ivory-dim border-t sm:border-t-0 sm:border-l border-article-panel-line pt-4 sm:pt-0 sm:pl-3.5 mt-4 sm:mt-0">
+                <span className="font-mono text-[11px] text-article-teal uppercase tracking-widest block mb-1">Summer '26</span>
+                Core system build, testing, performance evaluation, and final report writing.
+              </div>
+            </div>
+          </div>
+
+          <h3 className="font-article font-semibold text-[20px] text-article-ivory mb-[18px]">References</h3>
+          <ul className="text-[14px] text-article-ivory-dim list-disc pl-5 space-y-2.5">
+            <li>Trenberth, K. E. (1997). The definition of El Niño. <em>Bulletin of the American Meteorological Society</em>, 78(12), 2771–2778.</li>
+            <li>McPhaden, M. J., Zebiak, S. E., &amp; Glantz, M. H. (2006). ENSO as an integrating concept in earth science. <em>Science</em>, 314(5806), 1740–1745.</li>
+            <li>Mohsin, M., Ghosh, T., Akter, F., Sarkar, S., &amp; Mullick, M. R. (2025). Seasonal weather pattern prediction from ENSO indices using machine learning.</li>
+            <li>Ehsan, M. A., Tippett, M. K., Robertson, A. W., Singh, B., &amp; Rahman, M. A. (2023). The ENSO fingerprint on Bangladesh summer monsoon rainfall. <em>Earth Systems and Environment</em>, 7(3), 617–627.</li>
+            <li>Hossain, S., Cloke, H. L., Fıcchı, A., Turner, A. G., &amp; Stephens, E. (2019). Hydrometeorological drivers of the 2017 flood in the Brahmaputra basin in Bangladesh. <em>Hydrology and Earth System Sciences Discussions</em>.</li>
+            <li>Wang, G.-G., Cheng, H., Zhang, Y., &amp; Yu, H. (2023). ENSO analysis and prediction using deep learning: A review. <em>Neurocomputing</em>, 520, 216–229.</li>
+            <li>Fang, W., Sha, Y., &amp; Sheng, V. S. (2022). Survey on the application of artificial intelligence in ENSO forecasting. <em>Mathematics</em>, 10(20), 3793.</li>
+            <li>Xiaoqun, C., Yanan, G., Bainian, L., Kecheng, P., Guangjie, W., &amp; Mei, G. (2020). ENSO prediction based on long short-term memory (LSTM). <em>IOP Conference Series: Materials Science and Engineering</em>, 799, 012035.</li>
+            <li>Chen, T., &amp; Guestrin, C. (2016). XGBoost: A scalable tree boosting system. In <em>Proceedings of the 22nd ACM SIGKDD International Conference on Knowledge Discovery and Data Mining</em> (pp. 785–794).</li>
+            <li>Hochreiter, S., &amp; Schmidhuber, J. (1997). Long short-term memory. <em>Neural Computation</em>, 9(8), 1735–1780.</li>
+            <li>Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., Kaiser, Ł., &amp; Polosukhin, I. (2017). Attention is all you need. <em>Advances in Neural Information Processing Systems</em>, 30.</li>
+            <li>Ham, Y.-G., Kim, J.-H., &amp; Luo, J.-J. (2019). Deep learning for multi-year ENSO forecasts. <em>Nature</em>, 573(7775), 568–572.</li>
+            <li>Jafarzadegan, K., Moradkhani, H., Pappenberger, F., Moftakhari, H., Bates, P., Abbaszadeh, P., et al. (2023). Recent advances and new frontiers in riverine and coastal flood modeling. <em>Reviews of Geophysics</em>, 61(2), e2022RG000788.</li>
+            <li>Islam, S. (2017). Assessment of the impact and management of flood, drought and river bank erosion: A case study of char land peoples of Gangachara Upazila, Rangpur district, Bangladesh. <em>Imperial Journal of Interdisciplinary Research</em>, 3(4), 96–111.</li>
+            <li>Shen, C. (2018). A transdisciplinary review of deep learning research and its relevance for water resources scientists. <em>Water Resources Research</em>, 54(11), 8558–8593.</li>
+          </ul>
         </footer>
 
       </main>
