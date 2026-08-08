@@ -12,23 +12,32 @@ export default function ArticleSection({ id, index, title, children }: ArticleSe
   return (
     <motion.section 
       id={id}
-      className="py-14 border-b border-article-panel-line last:border-b-0 scroll-mt-20"
+      className="scroll-mt-24 mb-8 relative group"
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-10%" }}
-      transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
     >
-      <div className="font-mono text-article-teal text-[13px] tracking-widest mb-3 uppercase">
-        {index}
-      </div>
-      
-      <h2 className="font-article font-semibold text-[clamp(22px,3vw,29px)] leading-snug text-article-ivory mb-6 max-w-3xl">
-        {title}
-      </h2>
-      
-      <div className="text-article-ivory-dim text-[16.5px] leading-relaxed max-w-[680px] space-y-4 [&>p]:mb-4 [&_strong]:text-article-ivory [&_strong]:font-semibold [&_a]:text-article-gold [&_a]:underline [&_a]:decoration-article-gold/40 hover:[&_a]:decoration-article-gold">
-        {children}
+      {/* Decorative side accent */}
+      <div className="absolute -left-3 top-6 bottom-6 w-1 bg-gradient-to-b from-accent to-transparent rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 hidden md:block" />
+
+      <div className="glass rounded-2xl p-6 md:p-8 lg:p-10 border border-white/10 hover:border-accent/30 transition-colors duration-500">
+        <div className="flex items-center gap-3 mb-6">
+          <span className="h-px flex-1 bg-gradient-to-r from-accent/50 to-transparent" />
+          <span className="font-mono text-accent text-xs font-bold tracking-[0.2em] uppercase shrink-0">
+            {index}
+          </span>
+        </div>
+        
+        <h2 className="font-display font-bold text-2xl md:text-3xl text-white mb-8 tracking-tight">
+          {title}
+        </h2>
+        
+        <div className="prose prose-invert prose-lg max-w-none prose-p:text-white/70 prose-headings:text-white prose-strong:text-white prose-a:text-accent hover:prose-a:text-accent-light prose-a:no-underline hover:prose-a:underline prose-li:text-white/70">
+          {children}
+        </div>
       </div>
     </motion.section>
   );
 }
+
