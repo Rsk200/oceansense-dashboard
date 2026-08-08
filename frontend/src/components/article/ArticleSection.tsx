@@ -16,10 +16,10 @@ export default function ArticleSection({ id, index, title, children, variant = '
     <motion.section 
       id={id}
       className={`scroll-mt-24 mb-16 relative ${isGlass ? 'group' : ''}`}
-      initial={{ opacity: 0, y: 30 }}
+      initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-10%" }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
+      transition={{ duration: 0.8, ease: [0.25, 1, 0.5, 1] }}
     >
       {isGlass && (
         <div className="absolute -left-3 top-6 bottom-6 w-1 bg-gradient-to-b from-accent to-transparent rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500 hidden md:block" />
@@ -38,7 +38,7 @@ export default function ArticleSection({ id, index, title, children, variant = '
           {title}
         </h2>
         
-        <div className={`prose prose-invert prose-lg max-w-none prose-p:text-white/70 prose-headings:text-white prose-strong:text-white prose-a:text-accent hover:prose-a:text-accent-light prose-a:no-underline hover:prose-a:underline prose-li:text-white/70 ${!isGlass ? 'prose-p:leading-relaxed prose-p:text-lg md:prose-p:text-xl' : ''}`}>
+        <div className={`prose prose-invert prose-lg max-w-none prose-p:text-white/70 prose-headings:text-white prose-strong:text-white prose-a:text-accent hover:prose-a:text-accent-light prose-a:no-underline hover:prose-a:underline prose-li:text-white/70 ${!isGlass ? 'prose-p:leading-[1.75] prose-p:text-lg md:prose-p:text-xl' : 'prose-p:leading-[1.6]'}`}>
           {children}
         </div>
       </div>
