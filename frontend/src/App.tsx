@@ -10,6 +10,7 @@ import SmoothScroll from './components/layout/SmoothScroll';
 import LoadingSpinner from './components/common/LoadingSpinner';
 import Landing from './pages/Landing';
 import About from './pages/About';
+import Article from './pages/Article';
 import DashboardLayout from './components/dashboard/DashboardLayout';
 
 const Overview = lazy(() => import('./pages/Dashboard/Overview'));
@@ -44,6 +45,7 @@ function AnimatedRoutes() {
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<Landing />} />
         <Route path="/about" element={<About />} />
+        <Route path="/research" element={<Article />} />
         
         {/* Dashboard Routes */}
         <Route path="/dashboard" element={<DashboardLayout />}>
