@@ -74,12 +74,12 @@ const Hero = () => {
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
-              <a href="/#research-section" className="w-full sm:w-auto">
+              <Link to="/research" className="w-full sm:w-auto">
                 <Button variant="secondary" size="lg" className="w-full rounded-md text-sm font-bold sm:w-auto group">
                   Research &amp; Methodology
                   <ChevronRight className="ml-1.5 h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                 </Button>
-              </a>
+              </Link>
             </div>
 
             {/* Stat chips */}

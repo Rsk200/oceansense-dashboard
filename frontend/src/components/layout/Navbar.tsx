@@ -12,7 +12,7 @@ const Navbar = () => {
 
   const navLinks = [
     { to: '/#home', label: 'Home', hash: 'home' },
-    { to: '/#research', label: 'Research', hash: 'research' },
+    { to: '/research', label: 'Research', hash: '' },
     { to: '/#pipeline', label: 'AI Pipeline', hash: 'pipeline' },
     { to: '/dashboard/overview', label: 'Dashboard', hash: '' },
     { to: '/#tech', label: 'Resources', hash: 'tech' },
